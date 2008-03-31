@@ -4,10 +4,9 @@ import jetbrains.buildServer.vcs.*;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import jetbrains.buildServer.Used;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
+import jetbrains.buildServer.serverSide.InvalidProperty;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Comparator;
+import java.util.*;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,11 @@ public class GitVcs extends VcsSupport{
   }
 
   public PropertiesProcessor getVcsPropertiesProcessor() {
-    return null;
+    return new PropertiesProcessor(){
+      public Collection<InvalidProperty> process(Map<String, String> properties) {
+        return new ArrayList<InvalidProperty>();
+      }
+    };
   }
 
   public String getVcsSettingsJspFilePath() {
@@ -77,5 +80,9 @@ public class GitVcs extends VcsSupport{
   @NotNull
   public Comparator<String> getVersionComparator() {
     return null;
+  }
+
+  private boolean nullOrEmpty(Object o) {
+    return o == null || "".equals(o);
   }
 }
