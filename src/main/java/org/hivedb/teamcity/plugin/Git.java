@@ -1,5 +1,7 @@
 package org.hivedb.teamcity.plugin;
 
+import com.intellij.openapi.vcs.VcsRoot;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;

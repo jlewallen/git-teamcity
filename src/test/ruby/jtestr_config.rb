@@ -2,7 +2,7 @@ require 'rexml/document'
 
 class ClasspathHelper
   def self.project_root
-    ENV['PWD'].split('src').first.to_s
+    File.dirname(__FILE__).split('src').first.to_s
   end
 
   def self.project_name
@@ -43,6 +43,9 @@ class ClasspathHelper
 end
 
 #rspec_formatter ["s", STDERR]
+# Dir[File.dirname(__FILE__) + '/../../../lib/**/*.jar']
 
 classpath ClasspathHelper.find_jars
+classpath ClasspathHelper.project_root + 'lib/common.jar'
+classpath ClasspathHelper.project_root + 'lib/common_resources_en.jar'
 add_common_classpath true

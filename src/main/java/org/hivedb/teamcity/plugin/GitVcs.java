@@ -52,7 +52,7 @@ public class GitVcs extends VcsSupport{
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
-    return null;
+    return git(root).log(1).iterator().next().getId();
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
@@ -60,11 +60,10 @@ public class GitVcs extends VcsSupport{
   }
 
   public boolean isTestConnectionSupported() {
-    return true;
+    return false;
   }
 
   public String testConnection(VcsRoot vcsRoot) throws VcsException {
-    vcsRoot.getProperty("uri");
     return null;
   }
 
@@ -84,5 +83,9 @@ public class GitVcs extends VcsSupport{
 
   private boolean nullOrEmpty(Object o) {
     return o == null || "".equals(o);
+  }
+
+  private Git git(VcsRoot root) {
+    return new Git(root.getProperty("git_command"));
   }
 }

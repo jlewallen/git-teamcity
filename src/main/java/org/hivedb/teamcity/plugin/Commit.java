@@ -2,6 +2,7 @@ package org.hivedb.teamcity.plugin;
 
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Commit {
   public Commit(){}
@@ -41,6 +42,16 @@ public class Commit {
 
   public void setDate(Date date) {
     this.date = date;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder s = new StringBuilder();
+    s.append("commit ").append(this.getId()).append("\n");
+    s.append("Author: ").append(this.getAuthor()).append("\n");
+    s.append("Date: ").append(new SimpleDateFormat(Git.GIT_DATE_FORMAT).format(this.getDate())).append("\n");
+    s.append("\n\t").append(this.getMessage());
+    return s.toString();
   }
 
   public boolean isValid() {
