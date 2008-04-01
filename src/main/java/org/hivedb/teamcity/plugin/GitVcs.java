@@ -64,21 +64,29 @@ public class GitVcs extends VcsSupport{
   }
 
   public String testConnection(VcsRoot vcsRoot) throws VcsException {
-    return null;
+    throw new UnsupportedOperationException("Not implemented, git is a distributed version control system. Your repo is local.");
   }
 
   @Nullable
   public Map<String, String> getDefaultVcsProperties() {
-    return null;
+    Map<String,String> p = new HashMap<String,String>();
+    p.put("git_command", "/usr/loca/bin/git");
+    return p;
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
-    return null;
+    //return git(root).log(1).iterator().next().toString();
+    throw new UnsupportedOperationException("Not Implemented!");
   }
 
+  // TODO Implement properly
   @NotNull
   public Comparator<String> getVersionComparator() {
-    return null;
+    return new Comparator<String>(){
+      public int compare(String o1, String o2) {
+        return o1.compareTo(o2);
+      }
+    };
   }
 
   private boolean nullOrEmpty(Object o) {
