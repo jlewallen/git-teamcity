@@ -2,7 +2,7 @@ require 'rexml/document'
 
 class ClasspathHelper
   def self.project_root
-    File.dirname(__FILE__).split('src').first.to_s
+    ENV['PWD']
   end
 
   def self.project_name
@@ -11,7 +11,7 @@ class ClasspathHelper
 
   def self.find_jars(opts = {})
     eclipse_file = opts.key?(:eclipse) ? opts[:eclipse] : "#{project_root}/.classpath"
-    idea_file ||= opts.key?(:idea) ? opts[:idea] : "#{project_root}/#{project_name}.iml"
+    idea_file = opts.key?(:idea) ? opts[:idea] : "#{project_root}/#{project_name}.iml"
 
     jars = []
     if File.exist?(eclipse_file)
@@ -42,10 +42,5 @@ class ClasspathHelper
   end
 end
 
-#rspec_formatter ["s", STDERR]
-# Dir[File.dirname(__FILE__) + '/../../../lib/**/*.jar']
-
 classpath ClasspathHelper.find_jars
-classpath ClasspathHelper.project_root + 'lib/common.jar'
-classpath ClasspathHelper.project_root + 'lib/common_resources_en.jar'
 add_common_classpath true

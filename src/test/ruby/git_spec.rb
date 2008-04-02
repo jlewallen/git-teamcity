@@ -19,4 +19,13 @@ describe Git do
   it 'should fetch the requested number of commit logs' do
     @git.log(2).size.should equal(2)
   end
+
+  it 'should list the revisions between two commits' do
+    commits = [].concat @git.log(3).toArray
+    head,tail = commits.first, commits.last
+    revs = @git.revList(tail.getId, head.getId)
+    revs.size.should == 2
+    revs.include?(head.getId).should equal(true)
+    revs.include?(tail.getId).should equal(false)
+  end
 end

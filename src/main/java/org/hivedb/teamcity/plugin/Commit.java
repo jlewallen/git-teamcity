@@ -5,6 +5,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class Commit {
+  public static final String VERSION_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
+  private SimpleDateFormat format = new SimpleDateFormat(VERSION_DATE_FORMAT);
+
   public Commit(){}
   public Commit(String id, String author, Date date) {
     this.id = id;
@@ -42,6 +45,10 @@ public class Commit {
 
   public void setDate(Date date) {
     this.date = date;
+  }
+
+  public String getVersion() {
+    return String.format("%s - %s", getId(), format.format(getDate()));
   }
 
   @Override

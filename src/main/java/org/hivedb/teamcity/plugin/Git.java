@@ -9,6 +9,7 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -19,6 +20,11 @@ public class Git {
 
   public Git(String cmd) {
     this.gitCommand = cmd;
+  }
+
+  public Collection<String> revList(String rev1, String rev2) {
+    String log = runCommand(String.format("%s rev-list %s...%s", getGitCommand(), rev1, rev2));
+    return Arrays.asList(log.split("\n"));
   }
 
   public Collection<Commit> log(int n) {

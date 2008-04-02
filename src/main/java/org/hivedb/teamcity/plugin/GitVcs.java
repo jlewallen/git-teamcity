@@ -3,6 +3,7 @@ package org.hivedb.teamcity.plugin;
 import jetbrains.buildServer.vcs.*;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import jetbrains.buildServer.Used;
+import jetbrains.buildServer.AgentSideCheckoutAbility;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.InvalidProperty;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GitVcs extends VcsSupport{
+public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport {
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
     return null;
   }
@@ -52,7 +53,7 @@ public class GitVcs extends VcsSupport{
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
-    return git(root).log(1).iterator().next().getId();
+    return git(root).log(1).iterator().next().getVersion();
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
@@ -70,23 +71,18 @@ public class GitVcs extends VcsSupport{
   @Nullable
   public Map<String, String> getDefaultVcsProperties() {
     Map<String,String> p = new HashMap<String,String>();
-    p.put("git_command", "/usr/loca/bin/git");
+    p.put("git_command", "/usr/bin/env git");
+    p.put("working_directory", "./");
     return p;
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
-    //return git(root).log(1).iterator().next().toString();
-    throw new UnsupportedOperationException("Not Implemented!");
+    return git(root).log(1).iterator().next().toString();
   }
 
-  // TODO Implement properly
   @NotNull
   public Comparator<String> getVersionComparator() {
-    return new Comparator<String>(){
-      public int compare(String o1, String o2) {
-        return o1.compareTo(o2);
-      }
-    };
+    return new GitComparator();
   }
 
   private boolean nullOrEmpty(Object o) {
@@ -95,5 +91,14 @@ public class GitVcs extends VcsSupport{
 
   private Git git(VcsRoot root) {
     return new Git(root.getProperty("git_command"));
+  }
+
+  public boolean isAgentSideCheckoutAvailable() {
+    return true;
+  }
+
+  @Nullable
+  public String mapFullPath(VcsRoot vcsRoot, String s) {
+    return null;
   }
 }
