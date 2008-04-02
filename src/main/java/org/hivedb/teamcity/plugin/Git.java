@@ -32,7 +32,9 @@ public class Git {
     return parseCommitLog(log);
   }
 
-
+  public String show(String rev, String file) {
+    return runCommand(String.format("%s show %s:%s", getGitCommand(), rev, file));
+  }
 
   private String runCommand(String cmd) {
     Process cmdProc = null;

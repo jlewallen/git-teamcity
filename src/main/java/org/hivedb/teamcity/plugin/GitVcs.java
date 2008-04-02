@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport {
+  private static final String GIT_COMMAND = "git_command";
+  private static final String WORKING_DIRECTORY = "working_directory";
+
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
     return null;
   }
@@ -28,7 +31,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @NotNull
   public byte[] getContent(String filePath, VcsRoot versionedRoot, String version) throws VcsException {
-    return new byte[0];
+    String groomedVersion = version.split("-")[0].trim();
+    return git(versionedRoot).show(groomedVersion, filePath).getBytes();
   }
 
   public String getName() {
@@ -49,7 +53,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String getVcsSettingsJspFilePath() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
@@ -57,7 +61,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
-    return null;
+    return String.format("%s: %s", vcsRoot.getProperty(WORKING_DIRECTORY));
   }
 
   public boolean isTestConnectionSupported() {
@@ -71,8 +75,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   @Nullable
   public Map<String, String> getDefaultVcsProperties() {
     Map<String,String> p = new HashMap<String,String>();
-    p.put("git_command", "/usr/bin/env git");
-    p.put("working_directory", "./");
+    p.put(GIT_COMMAND, "/usr/bin/env git");
+    p.put(WORKING_DIRECTORY, "./");
     return p;
   }
 
@@ -90,7 +94,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   private Git git(VcsRoot root) {
-    return new Git(root.getProperty("git_command"));
+    return new Git(root.getProperty(GIT_COMMAND));
   }
 
   public boolean isAgentSideCheckoutAvailable() {
@@ -99,6 +103,10 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @Nullable
   public String mapFullPath(VcsRoot vcsRoot, String s) {
-    return null;
+    String workingDirectory = vcsRoot.getProperty(WORKING_DIRECTORY);
+    if(workingDirectory.endsWith("/") && s.startsWith("/"))
+      return workingDirectory + s.substring(1);
+    else
+      return workingDirectory + s;
   }
 }

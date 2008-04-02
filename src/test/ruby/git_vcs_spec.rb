@@ -11,7 +11,11 @@ class MyVcsRoot < FauxVcsRoot
   end
 
   def getProperty(name)
-    `which git`
+    if name == 'git_command'
+      return `which git`
+    else
+      return "/tmp/"
+    end
   end
 end
 
@@ -41,5 +45,21 @@ describe GitVcs do
     logs = [].concat @git.log(1).toArray
     latest = logs.first
     @vcs.getVersionDisplayName(latest.getId, MyVcsRoot.new).should == latest.to_s
+  end
+
+  it 'should build relative paths' do
+    @vcs.mapFullPath(MyVcsRoot.new, "src/main/java").should == "/tmp/src/main/java"
+  end
+
+  it 'should trim trailing slashes from relative paths' do
+    @vcs.mapFullPath(MyVcsRoot.new, "/src/main/java").should == "/tmp/src/main/java"
+  end
+
+  it 'should get the specified version of a file as a byte stream' do
+    commits = [].concat @git.log(3).toArray
+    commit = commits.last
+    pom = `git show #{commit.getId}:pom.xml`
+    vcs_pom = java.lang.String.new(@vcs.getContent('pom.xml',MyVcsRoot.new,commit.getVersion))
+    vcs_pom.should == pom
   end
 end
