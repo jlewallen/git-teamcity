@@ -26,7 +26,12 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @NotNull
   public byte[] getContent(VcsModification vcsModification, VcsChangeInfo change, VcsChangeInfo.ContentType contentType, VcsRoot vcsRoot) throws VcsException {
-    return new byte[0];
+    if(change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED )
+      return new byte[]{};
+    else {
+      String rev = contentType == VcsChangeInfo.ContentType.BEFORE_CHANGE ? change.getBeforeChangeRevisionNumber() : change.getAfterChangeRevisionNumber();
+      return getContent(change.getRelativeFileName(), vcsRoot, rev);
+    }
   }
 
   @NotNull
