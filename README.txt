@@ -1,0 +1,1 @@
+A plugin for JetBrains TeamCity (http://www.jetbrains.com/teamcity/) that allows it to use the Git version control system (http://git.or.cz/).
