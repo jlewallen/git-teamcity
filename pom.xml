@@ -58,6 +58,11 @@
     </dependency>
     <dependency>
       <groupId>jetbrains</groupId>
+      <artifactId>web-openapi</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jetbrains</groupId>
       <artifactId>server-model</artifactId>
       <version>3.0</version>
     </dependency>
@@ -74,6 +79,7 @@
     </dependency>
   </dependencies>
   <build>
+    <finalName>git-vcs</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

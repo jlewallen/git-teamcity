@@ -4,6 +4,7 @@ import jetbrains.buildServer.vcs.*;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import jetbrains.buildServer.Used;
 import jetbrains.buildServer.AgentSideCheckoutAbility;
+import jetbrains.buildServer.CollectChangesByIncludeRule;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.InvalidProperty;
 
@@ -12,16 +13,23 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import jetbrains.buildServer.web.openapi.WebResourcesManager;
 
-public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport {
+public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport, CollectChangesByIncludeRule {
   private static final String GIT_COMMAND = "git_command";
   private static final String WORKING_DIRECTORY = "working_directory";
+  
+  public GitVcs(VcsManager vcsmanager, WebResourcesManager resourcesManager) {
+    vcsmanager.registerVcsSupport(this);
+    resourcesManager.addPluginResources("git", "git-vcs.jar");
+  }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
-    return null;
+    return VcsSupportUtil.collectBuildChanges(root, fromVersion, currentVersion, checkoutRules, this);
   }
 
   public void buildPatch(VcsRoot root, String fromVersion, String toVersion, PatchBuilder builder, CheckoutRules checkoutRules) throws IOException, VcsException {
+    throw new UnsupportedOperationException();
   }
 
   @NotNull
@@ -58,7 +66,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String getVcsSettingsJspFilePath() {
-    throw new UnsupportedOperationException();
+    return "git_settings.jsp";
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
@@ -113,5 +121,9 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       return workingDirectory + s.substring(1);
     else
       return workingDirectory + s;
+  }
+
+  public List<ModificationData> collectBuildChanges(VcsRoot vcsRoot, String s, String s1, IncludeRule includeRule) throws VcsException {
+    throw new UnsupportedOperationException();
   }
 }

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class GitVcsManager extends AbstractVcs {
+  
   public GitVcsManager(Project project) {
     super(project);
   }
