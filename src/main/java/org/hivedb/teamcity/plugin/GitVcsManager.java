@@ -27,39 +27,6 @@ public class GitVcsManager extends AbstractVcs {
   }
 
   public Configurable getConfigurable() {
-    return new Configurable(){
-      @Nls
-      public String getDisplayName() {
-        return null;
-      }
-
-      @Nullable
-      public Icon getIcon() {
-        return null;
-      }
-
-      @Nullable
-      @NonNls
-      public String getHelpTopic() {
-        return null;
-      }
-
-      public JComponent createComponent() {
-        return null;
-      }
-
-      public boolean isModified() {
-        return false;
-      }
-
-      public void apply() throws ConfigurationException {
-      }
-
-      public void reset() {
-      }
-
-      public void disposeUIResources() {
-      }
-    };
+    return null;
   }
 }

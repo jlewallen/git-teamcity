@@ -21,7 +21,7 @@ end
 
 describe GitVcs do
   before(:each) do
-    @git = Git.new '/usr/local/bin/git'
+    @git = Git.new '/usr/local/bin/git' , '.'
     @vcs = GitVcs.new()
   end
   

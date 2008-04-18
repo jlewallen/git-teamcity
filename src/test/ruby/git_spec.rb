@@ -35,6 +35,8 @@ describe Git do
     @git.show(commit.getId,'pom.xml').should == pom
   end
 
+  it 'should clone a git repository'
+
   def get_commits(n)
     [].concat @git.log(n).toArray
   end

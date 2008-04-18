@@ -13,23 +13,39 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.apache.log4j.Logger;
 import jetbrains.buildServer.web.openapi.WebResourcesManager;
 
 public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport, CollectChangesByIncludeRule {
+  Logger log = Logger.getLogger(GitVcs.class);
+
   private static final String GIT_COMMAND = "git_command";
   private static final String WORKING_DIRECTORY = "working_directory";
-  
+
   public GitVcs(VcsManager vcsmanager, WebResourcesManager resourcesManager) {
     vcsmanager.registerVcsSupport(this);
     resourcesManager.addPluginResources("git", "git-vcs.jar");
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
+    log.warn(String.format("%s: Collecting build changes from %s to %s", root.getVcsName(), fromVersion, currentVersion));
+    logVcsRoot(root);
     return VcsSupportUtil.collectBuildChanges(root, fromVersion, currentVersion, checkoutRules, this);
   }
 
   public void buildPatch(VcsRoot root, String fromVersion, String toVersion, PatchBuilder builder, CheckoutRules checkoutRules) throws IOException, VcsException {
-    throw new UnsupportedOperationException();
+    log.warn(String.format("%s: Building patch from '%s' to '%s'", root.getVcsName(), fromVersion, toVersion));
+    logVcsRoot(root);
+  }
+
+  private void logVcsRoot(VcsRoot root) {
+    log.warn("=== VcsRoot ===");
+    log.warn("Type: " + root.getVcsName());
+    log.warn("Root Version: " + root.getRootVersion());
+    Map<String,String> p = root.getProperties();
+    for(Map.Entry<String, String> entry : p.entrySet())
+      log.warn(String.format("%s: %s", entry.getKey(), entry.getValue()));
+    log.warn("Current working directory: " + System.getProperty("user.dir"));
   }
 
   @NotNull
@@ -70,11 +86,14 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
+    log.warn(String.format("%s: Getting current version", root.getVcsName()));
+    logVcsRoot(root);
+    Collection<Commit> commits = git(root).log(1);
     return git(root).log(1).iterator().next().getVersion();
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
-    return String.format("%s: %s", vcsRoot.getProperty(WORKING_DIRECTORY));
+    return String.format("%s: %s", vcsRoot.getProperty(GIT_COMMAND), vcsRoot.getProperty(WORKING_DIRECTORY));
   }
 
   public boolean isTestConnectionSupported() {
@@ -100,6 +119,10 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   @NotNull
   public Comparator<String> getVersionComparator() {
     return new GitComparator();
+  }
+
+  public VcsPersonalSupport getPersonalSupport() {
+    return this;
   }
 
   private boolean nullOrEmpty(Object o) {

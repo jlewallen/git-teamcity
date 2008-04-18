@@ -10,7 +10,7 @@
       <span class="error" id="error_git_command"></span></td>
   </tr>
   <tr>
-    <th><label for="working_directory">Project Directory:</label></th>
+    <th><label for="working_directory">Project Directory:  <l:star/></label></th>
     <td><props:textProperty name="working_directory" className="longField" maxlength="256"/>
       <span class="error" id="error_working_directory"></span></td>
   </tr>

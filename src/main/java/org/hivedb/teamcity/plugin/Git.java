@@ -16,10 +16,16 @@ import java.text.ParseException;
 
 public class Git {
   String gitCommand;
+  String workingDirectory = null;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
   public Git(String cmd) {
     this.gitCommand = cmd;
+  }
+
+  public Git(String cmd, String workingDirectory) {
+    this(cmd);
+    this.workingDirectory = workingDirectory;
   }
 
   public Collection<String> revList(String rev1, String rev2) {
@@ -38,7 +44,10 @@ public class Git {
 
   private String runCommand(String cmd) {
     Process cmdProc = null;
+
     try {
+      if(workingDirectory != null)
+        Runtime.getRuntime().exec("cd " + workingDirectory);
       cmdProc = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
       throw new RuntimeException(e);
