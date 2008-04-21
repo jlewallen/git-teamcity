@@ -7,6 +7,10 @@ describe Git do
     @git = Git.new '/usr/local/bin/git'
   end
 
+  it "should be able to identify git repositories" do
+    @git.isGitRepo.should be(true)
+  end
+
   it 'should parse commit logs properly' do
     logs = get_commits(1)
     commit = logs.first

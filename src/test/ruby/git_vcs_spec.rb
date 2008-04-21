@@ -21,10 +21,10 @@ end
 
 describe GitVcs do
   before(:each) do
-    @git = Git.new '/usr/local/bin/git' , '.'
+    @git = Git.new '/usr/local/bin/git'
     @vcs = GitVcs.new()
   end
-  
+
   it "should get the latest commit id" do
     last_version = `git log -n 1 | grep commit`
     date = `git log -n 1 | grep Date`

@@ -2,10 +2,7 @@ package org.hivedb.teamcity.plugin;
 
 import com.intellij.openapi.vcs.VcsRoot;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,19 +10,17 @@ import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+import org.apache.log4j.Logger;
+
 
 public class Git {
+  Logger log = Logger.getLogger(Git.class);
+
   String gitCommand;
-  String workingDirectory = null;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
   public Git(String cmd) {
     this.gitCommand = cmd;
-  }
-
-  public Git(String cmd, String workingDirectory) {
-    this(cmd);
-    this.workingDirectory = workingDirectory;
   }
 
   public Collection<String> revList(String rev1, String rev2) {
@@ -42,12 +37,19 @@ public class Git {
     return runCommand(String.format("%s show %s:%s", getGitCommand(), rev, file));
   }
 
+  public boolean isGitRepo() {
+    return new File(".git").exists();
+  }
+
+  public String clone(String url) {
+    return runCommand(String.format("%s clone %s", getGitCommand(), url));
+  }
+
   private String runCommand(String cmd) {
     Process cmdProc = null;
-
+    log.warn("cmd: " + cmd);
+    
     try {
-      if(workingDirectory != null)
-        Runtime.getRuntime().exec("cd " + workingDirectory);
       cmdProc = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
       throw new RuntimeException(e);
