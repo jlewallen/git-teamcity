@@ -89,7 +89,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public String getCurrentVersion(VcsRoot root) throws VcsException {
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
     logVcsRoot(root);
-    if(!git(root).isGitRepo())
+    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
       git(root).clone(root.getProperty(CLONE_URL));
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;

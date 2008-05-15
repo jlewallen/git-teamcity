@@ -37,8 +37,8 @@ public class Git {
     return runCommand(String.format("%s show %s:%s", getGitCommand(), rev, file));
   }
 
-  public boolean isGitRepo() {
-    return new File(".git").exists();
+  public boolean isGitRepo(String dir) {
+    return new File(new File(dir), ".git").exists();
   }
 
   public String clone(String url) {

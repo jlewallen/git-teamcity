@@ -1,6 +1,7 @@
-require "spec"
-import org.hivedb.teamcity.plugin.Git;
-import java.text.SimpleDateFormat;
+include Java
+require 'classpath_loader'
+include_class org.hivedb.teamcity.plugin.Git;
+include_class java.text.SimpleDateFormat;
 
 describe Git do
   before(:all) do
@@ -8,7 +9,7 @@ describe Git do
   end
 
   it "should be able to identify git repositories" do
-    @git.isGitRepo.should be(true)
+    @git.isGitRepo('/Users/britt/workspace/java/git-vcs').should be(true)
   end
 
   it 'should parse commit logs properly' do

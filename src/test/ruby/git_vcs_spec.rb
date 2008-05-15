@@ -1,9 +1,9 @@
-require "spec"
-import org.hivedb.teamcity.plugin.Git;
-import org.hivedb.teamcity.plugin.GitVcs;
-import org.hivedb.teamcity.plugin.test.FauxVcsRoot;
-import java.text.SimpleDateFormat;
-import org.hivedb.teamcity.plugin.Commit;
+include Java
+include_class org.hivedb.teamcity.plugin.Git;
+include_class org.hivedb.teamcity.plugin.GitVcs;
+include_class org.hivedb.teamcity.plugin.test.FauxVcsRoot;
+include_class java.text.SimpleDateFormat;
+include_class org.hivedb.teamcity.plugin.Commit;
 
 class MyVcsRoot < FauxVcsRoot
   def getVcsName
