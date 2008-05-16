@@ -22,6 +22,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   private static final String GIT_COMMAND = "git_command";
   private static final String WORKING_DIRECTORY = "working_directory";
   private static final String CLONE_URL = "clone_url";
+  private static final String PROJECT_NAME = "project_name";
 
   public GitVcs(VcsManager vcsmanager, WebResourcesManager resourcesManager) {
     vcsmanager.registerVcsSupport(this);
@@ -90,7 +91,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
     logVcsRoot(root);
     if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
-      git(root).clone(root.getProperty(CLONE_URL));
+      git(root).clone(root.getProperty(PROJECT_NAME),root.getProperty(CLONE_URL), root.getProperty(WORKING_DIRECTORY));
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;
     if(!commits.isEmpty()) {

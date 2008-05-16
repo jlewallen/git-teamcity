@@ -5,7 +5,14 @@ include_class java.text.SimpleDateFormat;
 
 describe Git do
   before(:all) do
+    @test_dir = ENV['PWD'] +  "/test-checkout"
+    Dir.mkdir @test_dir
+    @clone_url = 'git://github.com/britt/git-teamcity.git'
     @git = Git.new '/usr/local/bin/git'
+  end
+
+  after(:all) do
+    IO.popen("rm -rf #{@test_dir}").read
   end
 
   it "should be able to identify git repositories" do
@@ -40,7 +47,10 @@ describe Git do
     @git.show(commit.getId,'pom.xml').should == pom
   end
 
-  it 'should clone a git repository'
+  it 'should clone a git repository' do
+    @git.clone('git-teamcity', @clone_url, @test_dir)
+    @git.isGitRepo(@test_dir + '/git-teamcity').should be(true)
+  end
 
   def get_commits(n)
     [].concat @git.log(n).toArray

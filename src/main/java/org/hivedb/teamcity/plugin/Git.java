@@ -41,8 +41,8 @@ public class Git {
     return new File(new File(dir), ".git").exists();
   }
 
-  public String clone(String url) {
-    return runCommand(String.format("%s clone %s", getGitCommand(), url));
+  public String clone(String name, String url, String checkoutDir) {
+    return runCommand(String.format("%s clone %s %s/%s", getGitCommand(), url, checkoutDir, name));
   }
 
   private String runCommand(String cmd) {
