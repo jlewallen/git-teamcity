@@ -90,8 +90,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public String getCurrentVersion(VcsRoot root) throws VcsException {
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
     logVcsRoot(root);
-    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
-      git(root).clone(root.getProperty(PROJECT_NAME),root.getProperty(CLONE_URL), root.getProperty(WORKING_DIRECTORY));
+//    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
+//      git(root).clone(root.getProperty(PROJECT_NAME),root.getProperty(CLONE_URL), root.getProperty(WORKING_DIRECTORY));
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;
     if(!commits.isEmpty()) {
@@ -143,7 +143,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   private Git git(VcsRoot root) {
-    return new Git(root.getProperty(GIT_COMMAND));
+    return new Git(root.getProperty(GIT_COMMAND), root.getProperty(WORKING_DIRECTORY), root.getProperty(PROJECT_NAME));
   }
 
   public boolean isAgentSideCheckoutAvailable() {

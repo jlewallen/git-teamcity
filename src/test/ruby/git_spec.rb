@@ -5,18 +5,20 @@ include_class java.text.SimpleDateFormat;
 
 describe Git do
   before(:all) do
+    @clone_url = 'git://github.com/britt/git-teamcity.git'    
     @test_dir = ENV['PWD'] +  "/test-checkout"
-    Dir.mkdir @test_dir
-    @clone_url = 'git://github.com/britt/git-teamcity.git'
-    @git = Git.new '/usr/local/bin/git'
-  end
+    @project_dir = @test_dir + '/git-teamcity'
+    Dir.mkdir @test_dir unless(File.exists?(@test_dir))
+    @git = Git.new '/usr/local/bin/git', @test_dir, "git-teamcity"
+  end      
 
   after(:all) do
-    IO.popen("rm -rf #{@test_dir}").read
+   IO.popen("rm -rf #{@test_dir}").read
   end
 
   it "should be able to identify git repositories" do
-    @git.isGitRepo('/Users/britt/workspace/java/git-vcs').should be(true)
+    Dir.mkdir File.join(@test_dir, ".git") unless(File.exists?(File.join(@test_dir, ".git")))
+    @git.isGitRepo(@test_dir).should be(true)
   end
 
   it 'should parse commit logs properly' do
@@ -48,9 +50,21 @@ describe Git do
   end
 
   it 'should clone a git repository' do
-    @git.clone('git-teamcity', @clone_url, @test_dir)
-    @git.isGitRepo(@test_dir + '/git-teamcity').should be(true)
+    @git.clone(@clone_url)
+    @git.isGitRepo(@project_dir).should be(true)
   end
+
+  it 'should be able to do a fetch'
+
+  it 'should be able to do a pull'
+  
+  it 'should be able to check out a particular branch'
+
+  it 'should be able to create a branch'
+
+  it 'should be able to create a tag'
+
+  it 'should be able to checkout a tag'
 
   def get_commits(n)
     [].concat @git.log(n).toArray

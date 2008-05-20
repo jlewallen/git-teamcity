@@ -16,41 +16,55 @@ import org.apache.log4j.Logger;
 public class Git {
   Logger log = Logger.getLogger(Git.class);
 
-  String gitCommand;
+  File workingDirectory;
+  String gitCommand, projectName;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
-  public Git(String cmd) {
+  public Git(String cmd, String workingDirectory, String projectName) {
     this.gitCommand = cmd;
+    this.projectName = projectName;
+    this.workingDirectory = new File(workingDirectory);
   }
 
   public Collection<String> revList(String rev1, String rev2) {
-    String log = runCommand(String.format("%s rev-list %s...%s", getGitCommand(), rev1, rev2));
+    String log = runCommand(
+      new String[]{getGitCommand(), "rev-list", String.format("%s...%s", rev1, rev2)},
+      new String[]{}
+    );
     return Arrays.asList(log.split("\n"));
   }
 
   public Collection<Commit> log(int n) {
-    String log = runCommand(String.format("%s log -n %s", getGitCommand(), n));
+    String log = runCommand(
+      new String[]{getGitCommand(), "log", "-n", new Integer(n).toString()},
+      new String[]{}
+    );
     return parseCommitLog(log);
   }
 
   public String show(String rev, String file) {
-    return runCommand(String.format("%s show %s:%s", getGitCommand(), rev, file));
+    return runCommand(
+      new String[]{getGitCommand(), "show", String.format("%s:%s", rev, file)},
+      new String[]{}
+    );
   }
 
   public boolean isGitRepo(String dir) {
     return new File(new File(dir), ".git").exists();
   }
 
-  public String clone(String name, String url, String checkoutDir) {
-    return runCommand(String.format("%s clone %s %s/%s", getGitCommand(), url, checkoutDir, name));
+  public String clone(String url) {
+    return runCommand(
+      new String[]{getGitCommand(), "clone", url, new File(workingDirectory, this.projectName).getAbsolutePath()},
+      new String[]{}
+    );
   }
 
-  private String runCommand(String cmd) {
+  private String runCommand(String[] argz, String[] environment) {
     Process cmdProc = null;
-    log.warn("cmd: " + cmd);
     
     try {
-      cmdProc = Runtime.getRuntime().exec(cmd);
+      cmdProc = Runtime.getRuntime().exec(argz, environment, workingDirectory);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
