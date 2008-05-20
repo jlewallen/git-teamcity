@@ -29,7 +29,8 @@ public class Git {
   public Collection<String> revList(String rev1, String rev2) {
     String log = runCommand(
       new String[]{getGitCommand(), "rev-list", String.format("%s...%s", rev1, rev2)},
-      new String[]{}
+      new String[]{},
+      getProjectDirectory()
     );
     return Arrays.asList(log.split("\n"));
   }
@@ -37,7 +38,8 @@ public class Git {
   public Collection<Commit> log(int n) {
     String log = runCommand(
       new String[]{getGitCommand(), "log", "-n", new Integer(n).toString()},
-      new String[]{}
+      new String[]{},
+      getProjectDirectory()
     );
     return parseCommitLog(log);
   }
@@ -45,8 +47,13 @@ public class Git {
   public String show(String rev, String file) {
     return runCommand(
       new String[]{getGitCommand(), "show", String.format("%s:%s", rev, file)},
-      new String[]{}
+      new String[]{},
+      getProjectDirectory()
     );
+  }
+
+  public File getProjectDirectory() {
+    return new File(workingDirectory,this.projectName);
   }
 
   public boolean isGitRepo(String dir) {
@@ -55,12 +62,13 @@ public class Git {
 
   public String clone(String url) {
     return runCommand(
-      new String[]{getGitCommand(), "clone", url, new File(workingDirectory, this.projectName).getAbsolutePath()},
-      new String[]{}
+      new String[]{getGitCommand(), "clone", url, getProjectDirectory().getAbsolutePath()},
+      new String[]{},
+      workingDirectory
     );
   }
 
-  private String runCommand(String[] argz, String[] environment) {
+  private String runCommand(String[] argz, String[] environment, File workingDirectory) {
     Process cmdProc = null;
     
     try {

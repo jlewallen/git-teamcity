@@ -5,17 +5,27 @@ include_class java.text.SimpleDateFormat;
 
 describe Git do
   before(:all) do
+    @project_name = 'git-teamcity'
     @clone_url = 'git://github.com/britt/git-teamcity.git'    
-    @test_dir = ENV['PWD'] +  "/test-checkout"
-    @project_dir = @test_dir + '/git-teamcity'
+    @test_dir = File.join(ENV['PWD'], "test-checkout")
+    @project_dir = File.join(@test_dir, @project_name)
     Dir.mkdir @test_dir unless(File.exists?(@test_dir))
-    @git = Git.new '/usr/local/bin/git', @test_dir, "git-teamcity"
+    @git = Git.new '/usr/local/bin/git', @test_dir, @project_name
   end      
 
   after(:all) do
    IO.popen("rm -rf #{@test_dir}").read
   end
 
+  it 'should clone a git repository' do
+    @git.clone(@clone_url)
+    @git.isGitRepo(@project_dir).should be(true)
+  end
+
+  it "should have a project directory workingdir/project_name " do
+    @git.getProjectDirectory.getAbsolutePath.should == File.join(@test_dir, @project_name)
+  end
+  
   it "should be able to identify git repositories" do
     Dir.mkdir File.join(@test_dir, ".git") unless(File.exists?(File.join(@test_dir, ".git")))
     @git.isGitRepo(@test_dir).should be(true)
@@ -49,9 +59,8 @@ describe Git do
     @git.show(commit.getId,'pom.xml').should == pom
   end
 
-  it 'should clone a git repository' do
-    @git.clone(@clone_url)
-    @git.isGitRepo(@project_dir).should be(true)
+  it 'should be able to determine the current branch' do
+    true.should be(false)
   end
 
   it 'should be able to do a fetch'
