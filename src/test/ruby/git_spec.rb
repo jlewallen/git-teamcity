@@ -60,14 +60,22 @@ describe Git do
   end
 
   it 'should be able to determine the current branch' do
-    true.should be(false)
+    @git.getCurrentBranch.should == "master"
+  end
+
+  it 'should be able to list the remote branches' do
+    remote_branches = [].concat @git.getRemoteBranches
+    remote_branches.size.should_not be(0)
   end
 
   it 'should be able to do a fetch'
 
   it 'should be able to do a pull'
   
-  it 'should be able to check out a particular branch'
+  it 'should be able to check out a particular branch' do
+    @git.checkoutBranch("unit-test")
+    @git.getCurrentBranch.should == "unit-test"
+  end
 
   it 'should be able to create a branch'
 

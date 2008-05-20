@@ -52,6 +52,33 @@ public class Git {
     );
   }
 
+  public String getCurrentBranch() {
+    String branches = runCommand(
+      new String[]{getGitCommand(), "branch"},
+      new String[]{},
+      getProjectDirectory()
+    );
+    String branch;
+    for(String b : branches.split("\n")) {
+      if(b.trim().startsWith("*"))
+        return b.trim().replaceAll("\\*\\s*","");
+    }
+    throw new RuntimeException("Unable to determine the current branch");
+  }
+
+  public String[] getRemoteBranches() {
+    String result = runCommand(
+      new String[]{getGitCommand(), "branch", "-r"},
+      new String[]{},
+      getProjectDirectory()
+    );
+
+    if(result != null)
+      return result.split("\n");
+    else
+      throw new RuntimeException("Unable to list remote branches");
+  }
+
   public File getProjectDirectory() {
     return new File(workingDirectory,this.projectName);
   }
