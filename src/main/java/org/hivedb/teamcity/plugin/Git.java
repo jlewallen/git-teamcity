@@ -87,6 +87,22 @@ public class Git {
     );
   }
 
+  public void tag(String tagName, String message) {
+    runCommand(
+      new String[]{getGitCommand(), "tag", "-m", "message", tagName},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
+  public void branch(String branchName) {
+    runCommand(
+      new String[]{getGitCommand(), "branch", branchName},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
   public File getProjectDirectory() {
     return new File(workingDirectory,this.projectName);
   }

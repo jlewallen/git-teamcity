@@ -79,14 +79,12 @@ describe Git do
     @git.getCurrentBranch.should == "unit-test"
   end
 
-  it 'should be able to create a branch'
-
-  it 'should be able to create a tag'
-
   it 'should be able to checkout a tag' do
     @git.checkout("tag-test", "tag-test")
     @git.getCurrentBranch.should == "tag-test"
   end
+
+  it 'should be able to do a push'
 
   def get_commits(n)
     [].concat @git.log(n).toArray
