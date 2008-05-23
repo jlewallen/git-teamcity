@@ -79,6 +79,14 @@ public class Git {
       throw new RuntimeException("Unable to list remote branches");
   }
 
+  public void checkout(String localBranch, String remote) {
+    runCommand(
+      new String[]{getGitCommand(),"checkout", "--track","-b", localBranch, remote},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
   public File getProjectDirectory() {
     return new File(workingDirectory,this.projectName);
   }

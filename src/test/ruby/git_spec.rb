@@ -9,7 +9,9 @@ describe Git do
     @clone_url = 'git://github.com/britt/git-teamcity.git'    
     @test_dir = File.join(ENV['PWD'], "test-checkout")
     @project_dir = File.join(@test_dir, @project_name)
-    Dir.mkdir @test_dir unless(File.exists?(@test_dir))
+    unless(File.exists?(@test_dir))
+      Dir.mkdir @test_dir
+    end 
     @git = Git.new '/usr/local/bin/git', @test_dir, @project_name
   end      
 
@@ -19,7 +21,7 @@ describe Git do
 
   it 'should clone a git repository' do
     @git.clone(@clone_url)
-    @git.isGitRepo(@project_dir).should be(true)
+    @git.isGitRepo(@project_dir).should be(true)      
   end
 
   it "should have a project directory workingdir/project_name " do
@@ -73,7 +75,7 @@ describe Git do
   it 'should be able to do a pull'
   
   it 'should be able to check out a particular branch' do
-    @git.checkoutBranch("unit-test")
+    @git.checkout("unit-test", "origin/unit-test")
     @git.getCurrentBranch.should == "unit-test"
   end
 
@@ -81,7 +83,10 @@ describe Git do
 
   it 'should be able to create a tag'
 
-  it 'should be able to checkout a tag'
+  it 'should be able to checkout a tag' do
+    @git.checkout("tag-test", "tag-test")
+    @git.getCurrentBranch.should == "tag-test"
+  end
 
   def get_commits(n)
     [].concat @git.log(n).toArray
