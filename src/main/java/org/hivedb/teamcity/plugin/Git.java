@@ -103,6 +103,30 @@ public class Git {
     );
   }
 
+  public void fetch() {
+    runCommand(
+      new String[]{getGitCommand(), "fetch"},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
+  public void pull(String repository, String ref) {
+    runCommand(
+      new String[]{getGitCommand(), "pull", repository, ref},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
+  public void reset(String commit) {
+    runCommand(
+      new String[]{getGitCommand(), "reset", commit},
+      new String[]{},
+      getProjectDirectory()
+    );
+  }
+
   public File getProjectDirectory() {
     return new File(workingDirectory,this.projectName);
   }

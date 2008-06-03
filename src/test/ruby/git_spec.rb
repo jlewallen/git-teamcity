@@ -3,8 +3,8 @@ require 'classpath_loader'
 include_class org.hivedb.teamcity.plugin.Git;
 include_class java.text.SimpleDateFormat;
 
-describe Git do
-  before(:all) do
+describe Git do         
+  before(:each) do
     @project_name = 'git-teamcity'
     @clone_url = 'git://github.com/britt/git-teamcity.git'    
     @test_dir = File.join(ENV['PWD'], "test-checkout")
@@ -13,14 +13,14 @@ describe Git do
       Dir.mkdir @test_dir
     end 
     @git = Git.new '/usr/local/bin/git', @test_dir, @project_name
+    @git.clone(@clone_url)    
   end      
 
-  after(:all) do
-   IO.popen("rm -rf #{@test_dir}").read
+  after(:each) do
+    IO.popen("rm -rf #{@test_dir}").read
   end
 
   it 'should clone a git repository' do
-    @git.clone(@clone_url)
     @git.isGitRepo(@project_dir).should be(true)      
   end
 
@@ -70,10 +70,6 @@ describe Git do
     remote_branches.size.should_not be(0)
   end
 
-  it 'should be able to do a fetch'
-
-  it 'should be able to do a pull'
-  
   it 'should be able to check out a particular branch' do
     @git.checkout("unit-test", "origin/unit-test")
     @git.getCurrentBranch.should == "unit-test"
@@ -84,7 +80,19 @@ describe Git do
     @git.getCurrentBranch.should == "tag-test"
   end
 
-  it 'should be able to do a push'
+  it 'should be able to reset to a particular commit' do
+    penultimate = get_commits(2).last
+    @git.reset(penultimate.getId)
+    get_commits(1).first.getId.should == penultimate.getId
+  end
+
+  it 'should be able to do a fetch' do
+    @git.fetch
+  end
+
+  it 'should be able to do a pull' do
+    @git.pull ".","master"
+  end
 
   def get_commits(n)
     [].concat @git.log(n).toArray
