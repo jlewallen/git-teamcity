@@ -1,20 +1,19 @@
 package org.hivedb.teamcity.plugin;
 
-import jetbrains.buildServer.vcs.*;
-import jetbrains.buildServer.vcs.patches.PatchBuilder;
-import jetbrains.buildServer.Used;
 import jetbrains.buildServer.AgentSideCheckoutAbility;
 import jetbrains.buildServer.CollectChangesByIncludeRule;
-import jetbrains.buildServer.serverSide.PropertiesProcessor;
+import jetbrains.buildServer.Used;
 import jetbrains.buildServer.serverSide.InvalidProperty;
-
-import java.util.*;
-import java.io.IOException;
-
+import jetbrains.buildServer.serverSide.PropertiesProcessor;
+import jetbrains.buildServer.vcs.*;
+import jetbrains.buildServer.vcs.patches.PatchBuilder;
+import jetbrains.buildServer.web.openapi.WebResourcesManager;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.apache.log4j.Logger;
-import jetbrains.buildServer.web.openapi.WebResourcesManager;
+
+import java.io.IOException;
+import java.util.*;
 
 public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport, CollectChangesByIncludeRule {
   Logger log = Logger.getLogger(GitVcs.class);
@@ -30,7 +29,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
-    log.warn(String.format("%s: Collecting build changes from %s to %s", root.getVcsName(), fromVersion, currentVersion));
+    log.debug(String.format("%s: Collecting build changes from %s to %s", root.getVcsName(), fromVersion, currentVersion));
     logVcsRoot(root);
     return VcsSupportUtil.collectBuildChanges(root, fromVersion, currentVersion, checkoutRules, this);
   }
@@ -122,11 +121,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
-    String displayName = null;
     Collection<Commit> commits = git(root).log(1);
-    if(!commits.isEmpty())
-      displayName = commits.iterator().next().toString();
-    return displayName;
+    return !commits.isEmpty() ? commits.iterator().next().toString() : null;
   }
 
   @NotNull

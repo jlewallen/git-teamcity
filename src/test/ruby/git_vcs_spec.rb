@@ -13,8 +13,10 @@ class MyVcsRoot < FauxVcsRoot
   def getProperty(name)
     if name == 'git_command'
       return `which git`
-    else
+    elsif name == 'working_directory'
       return "/tmp/"
+    elsif name == 'clone_url'
+      return ''
     end
   end
 end

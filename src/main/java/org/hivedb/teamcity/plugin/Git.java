@@ -1,18 +1,16 @@
 package org.hivedb.teamcity.plugin;
 
-import com.intellij.openapi.vcs.VcsRoot;
-
-import java.io.*;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Arrays;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-
 import org.apache.log4j.Logger;
 
+import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+// TODO refactor for DI
+// TODO JavaDoc
 public class Git {
   Logger log = Logger.getLogger(Git.class);
 
@@ -26,7 +24,7 @@ public class Git {
     this.workingDirectory = new File(workingDirectory);
   }
 
-  public Collection<String> revList(String rev1, String rev2) {
+  public List<String> revList(String rev1, String rev2) {
     String log = runCommand(
       new String[]{getGitCommand(), "rev-list", String.format("%s...%s", rev1, rev2)},
       new String[]{},
@@ -35,7 +33,7 @@ public class Git {
     return Arrays.asList(log.split("\n"));
   }
 
-  public Collection<Commit> log(int n) {
+  public List<Commit> log(int n) {
     String log = runCommand(
       new String[]{getGitCommand(), "log", "-n", new Integer(n).toString()},
       new String[]{},
@@ -169,8 +167,8 @@ public class Git {
     return gitCommand;
   }
 
-  private Collection<Commit> parseCommitLog(String log) {
-    Collection<Commit> commits = new ArrayList<Commit>();
+  private List<Commit> parseCommitLog(String log) {
+    List<Commit> commits = new ArrayList<Commit>();
     BufferedReader r = new BufferedReader(new StringReader(log));
     String line;
     try {

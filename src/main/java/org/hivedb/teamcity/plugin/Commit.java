@@ -4,6 +4,7 @@ package org.hivedb.teamcity.plugin;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+//TODO JavaDoc
 public class Commit {
   public static final String VERSION_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
   private SimpleDateFormat format = new SimpleDateFormat(VERSION_DATE_FORMAT);
