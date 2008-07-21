@@ -1,13 +1,16 @@
 package org.hivedb.teamcity.plugin;
 
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 //TODO JavaDoc
+//TODO Add attributes to match ModificationData class
 public class Commit {
   public static final String VERSION_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
   private SimpleDateFormat format = new SimpleDateFormat(VERSION_DATE_FORMAT);
+  String id, author, message;
+  Date date;
 
   public Commit(){}
   public Commit(String id, String author, Date date) {
@@ -65,6 +68,4 @@ public class Commit {
   public boolean isValid() {
     return this.author != null && this.date != null && this.id != null;
   }
-  String id, author, message;
-  Date date;
 }
