@@ -3,6 +3,7 @@ package org.hivedb.teamcity.plugin;
 import java.io.File;
 import java.util.*;
 import java.io.IOException;
+import java.net.*;
 
 import jetbrains.buildServer.util.*;
 import jetbrains.buildServer.vcs.*;
@@ -25,6 +26,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   public void updateSources(BuildProgressLogger logger, File workingDirectory, VcsRoot root, String newVersion, IncludeRule includeRule)
    throws VcsException {
     log.info("updateSources: " + workingDirectory + " " + newVersion);
+
     if (!git(root, workingDirectory.getParentFile(), workingDirectory).isGitRepo(workingDirectory.getAbsolutePath())) {
       /* TeamCity creates this directory for us, nice of them... Git dislikes that though. */
       workingDirectory.delete();
@@ -39,15 +41,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
     return "git";
   }
 
-  private String[] getGitCommand(VcsRoot vcsRoot) {
-    String path = vcsRoot.getProperty(GIT_COMMAND);
-    if (new File(path).exists()) {
-      return new String[] { path };
-    }
-    return new String[] { "/usr/bin/git" };
-  }
-
   private Git git(VcsRoot root, File workingDirectory, File projectDirectory) {
-    return new Git(getGitCommand(root), workingDirectory.getAbsolutePath(), projectDirectory.getAbsolutePath());
+    return new Git(workingDirectory.getAbsolutePath(), projectDirectory.getAbsolutePath());
   }
 }

@@ -1,12 +1,16 @@
 package org.hivedb.teamcity.plugin;
 
 import com.intellij.openapi.vcs.VcsRoot;
+import com.intellij.execution.configurations.GeneralCommandLine;
+import jetbrains.buildServer.ExecResult;
 
 import java.io.*;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Hashtable;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -21,8 +25,8 @@ public class Git {
   String[] gitCommand;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
-  public Git(String[] cmd, String workingDirectory, String projectDirectory) {
-    this.gitCommand = cmd;
+  public Git(String workingDirectory, String projectDirectory) {
+    this.gitCommand = inferGitCommand();
     this.workingDirectory = new File(workingDirectory);
     this.projectDirectory = new File(projectDirectory);
   }
@@ -73,9 +77,8 @@ public class Git {
     );
   }
 
-  private String runCommand(String[] argz, String[] environment, File workingDirectory) {
+  private String unixRun(String[] argz, String[] environment, File workingDirectory) {
     Process cmdProc = null;
-    log.info("Running " + argz[0] + " in " + workingDirectory);
     try {
       cmdProc = Runtime.getRuntime().exec(argz, environment, workingDirectory);
     } catch (IOException e) {
@@ -87,6 +90,7 @@ public class Git {
     try {
       while((line = in.readLine()) != null) {
         output.append(line);
+        log.info(line.toString());
         output.append("\n");
       }
     } catch (IOException e) {
@@ -97,14 +101,36 @@ public class Git {
     try {
       while((line = errorStream.readLine()) != null) {
         error.append(line);
+        log.info(line.toString());
         error.append("\n");
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    log.info(output.toString());
-    log.info(error.toString());
     return output.toString();
+  }
+
+  private String runCommand(String[] argz, String[] environment, File workingDirectory) {
+    /*
+    if (argz[0].indexOf("Program") < 0) {
+      return unixRun(argz, environment, workingDirectory);
+    }
+    */
+    GeneralCommandLine cli = new GeneralCommandLine();
+    cli.setExePath(argz[0]);
+    cli.setWorkDirectory(workingDirectory.getAbsolutePath());
+    for (int i = 1; i < argz.length; ++i) {
+      cli.addParameter(argz[i]);
+    }
+    log.info("Running " + cli);
+    try {
+      ExecResult res = CommandUtil.runCommand(cli);
+      return res.getStdout();
+    } 
+    catch (/*Vcs*/Exception e) {
+      log.error(e.toString());
+      return "";
+    }
   }
 
   public String[] getGitCommand(String[] parameters) {
@@ -155,4 +181,20 @@ public class Git {
     }
     return commits;
   }
+
+
+  private String[] inferGitCommand() {
+    String[] defaults = new String[] {
+      "C:\\Program Files\\Git\\Cmd\\git-debug.cmd",
+      "C:\\Program Files\\Git\\Bin\\git.exe",
+      "/usr/bin/git",
+    };
+    for (String path: defaults) {
+      if (new File(path).exists()) {
+        return new String[] { path };
+      }
+    }
+    throw new RuntimeException("Unable to infer path to Git executable!");
+  }
+
 }

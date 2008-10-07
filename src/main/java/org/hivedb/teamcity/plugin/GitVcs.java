@@ -108,7 +108,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
-    return String.format("%s: %s", getGitCommand(vcsRoot), vcsRoot.getProperty(WORKING_DIRECTORY));
+    return String.format("%s", vcsRoot.getProperty(CLONE_URL));
   }
 
   public boolean isTestConnectionSupported() {
@@ -125,14 +125,6 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     p.put(GIT_COMMAND, "/usr/bin/env git");
     p.put(WORKING_DIRECTORY, "./");
     return p;
-  }
-
-  private String[] getGitCommand(VcsRoot vcsRoot) {
-    String path = vcsRoot.getProperty(GIT_COMMAND);
-    if (new File(path).exists()) {
-      return new String[] { path };
-    }
-    return new String[] { "/usr/bin/git" };
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
@@ -164,7 +156,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       projectName = "ProjectNameIsMissing";
     }
     File projectDirectory = new File(root.getProperty(WORKING_DIRECTORY), projectName);
-    return new Git(getGitCommand(root), root.getProperty(WORKING_DIRECTORY), projectDirectory.getAbsolutePath());
+    return new Git(root.getProperty(WORKING_DIRECTORY), projectDirectory.getAbsolutePath());
   }
 
   public boolean isAgentSideCheckoutAvailable() {

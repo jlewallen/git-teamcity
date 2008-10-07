@@ -91,6 +91,16 @@
       <version>3.0</version>
     </dependency>
     <dependency>
+      <groupId>jetbrains</groupId>
+      <artifactId>buildServerAgent</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jetbrains</groupId>
+      <artifactId>utils</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
