@@ -4,32 +4,38 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class VersionNumber {
-  private String number;
+  private String hash;
+  private Date date;
 
-  public VersionNumber(String number) {
-    this.number = number;
-  }
-
-  public VersionNumber(String hash, Date date) {
-    this.number = String.format("%s - %s", hash, Constants.VERSION_DATE.format(date));
-  }
-
-  public String getHash() {
-    return this.number.split(" - ")[0];
-  }
-
-  public Date getDate() {
-    String[] s = number.split("-");
+  public VersionNumber(String version) {
+    String[] fields = version.split("-");
     try {
-      return Constants.VERSION_DATE.parse(s[s.length - 1].trim());
+      if (fields.length != 2) {
+        throw new RuntimeException("Malformed Git Version: " + version);
+      }
+      date = Constants.VERSION_DATE.parse(fields[1].trim());
+      hash = fields[0].trim();
     }
     catch (ParseException e) {
       throw new RuntimeException(e);
     }
   }
 
+  public VersionNumber(String hash, Date date) {
+    this.hash = hash;
+    this.date = date;
+  }
+
+  public String getHash() {
+    return this.hash;
+  }
+
+  public Date getDate() {
+    return this.date;
+  }
+
   @Override
   public String toString() {
-    return this.number;
+    return String.format("%s - %s", hash, Constants.VERSION_DATE.format(date));
   }
 }
