@@ -47,8 +47,8 @@ public class Commit {
     this.date = date;
   }
 
-  public String getVersion() {
-    return String.format("%s - %s", getId(), format.format(getDate()));
+  public VersionNumber getVersion() {
+    return new VersionNumber(String.format("%s - %s", getId(), format.format(getDate())));
   }
 
   @Override

@@ -57,6 +57,14 @@ public class Git {
     return new File(new File(dir), ".git").exists();
   }
 
+  public String fetch() {
+    return runCommand(
+      getGitCommand(new String[]{"fetch", "-v"}),
+      new String[]{},
+      projectDirectory
+    );
+  }
+
   public String clone(String url) {
     return runCommand(
       getGitCommand(new String[]{"clone", url, projectDirectory.getAbsolutePath()}),

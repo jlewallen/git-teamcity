@@ -97,7 +97,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;
     if(!commits.isEmpty()) {
-      currentVersion = commits.iterator().next().getVersion();
+      currentVersion = commits.iterator().next().getVersion().toString();
       log.warn("Current Version: " + currentVersion);
     }
     else {

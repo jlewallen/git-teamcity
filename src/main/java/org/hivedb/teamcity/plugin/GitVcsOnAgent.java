@@ -30,6 +30,9 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
       workingDirectory.delete();
       git(root, workingDirectory.getParentFile(), workingDirectory).clone(root.getProperty(CLONE_URL));
     }
+    else {
+      git(root, workingDirectory.getParentFile(), workingDirectory).fetch();
+    }
   }
 
   public String getName() {
