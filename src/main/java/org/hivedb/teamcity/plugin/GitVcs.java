@@ -38,14 +38,13 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       new FetchCommand(configuration).run();
     }
     LogCommand getLog = new LogCommand(configuration);
-    Collection<Commit> revs = getLog.run();
-    if (revs.isEmpty()) {
+    Commit head = getLog.head();
+    if (head == null) {
       log.warn("No Current Version");
       return null;
     }
-    String currentVersion = revs.iterator().next().getVersion().toString();
-    log.warn("Current Version: " + currentVersion);
-    return currentVersion;
+    log.warn("Current Version: " + head);
+    return head.getVersion().toString();
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {

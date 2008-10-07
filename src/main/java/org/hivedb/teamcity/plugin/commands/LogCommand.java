@@ -32,13 +32,21 @@ public class LogCommand extends GitCommand {
   }
 
   public Commit run(VersionNumber version) throws VcsException { 
+    return getSingle(version.getHash());
+  }
+  
+  public Commit head() throws VcsException {
+    return getSingle("HEAD");
+  }
+  
+  private Commit getSingle(String ref) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
     cli.addParameter("-1");
-    cli.addParameter(version.getHash());
+    cli.addParameter(ref);
     Collection<Commit> commits = LogOutput.parse(exec(cli).getStdout()); 
     if (commits.size() != 1) {
-      throw new RuntimeException("Unable to log commit: " + version);
+      throw new RuntimeException("Unable to log commit: " + ref);
     }
     return commits.iterator().next();
   }
