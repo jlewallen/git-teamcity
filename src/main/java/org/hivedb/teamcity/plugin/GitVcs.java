@@ -139,7 +139,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     Collection<Commit> commits = git(root).log(1);
     if(!commits.isEmpty())
       displayName = commits.iterator().next().toString();
-    return displayName;
+    log.info("getVersionDisplayName: " + version + " = " + displayName);
+    return version;
   }
 
   @NotNull

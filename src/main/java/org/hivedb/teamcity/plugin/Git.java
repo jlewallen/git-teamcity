@@ -91,7 +91,6 @@ public class Git {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    log.info(output.toString());
     return output.toString();
   }
 
