@@ -1,4 +1,3 @@
 <container>
-  <component class="org.hivedb.teamcity.plugin.GitVcs" />
   <component class="org.hivedb.teamcity.plugin.GitVcsOnAgent" />
 </container>
