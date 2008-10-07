@@ -89,7 +89,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String testConnection(VcsRoot root) throws VcsException {
-    throw new UnsupportedOperationException("Not implemented, git is a distributed version control system. Your repo is local.");
+    throw new UnsupportedOperationException();
   }
 
   public boolean isTestConnectionSupported() {
