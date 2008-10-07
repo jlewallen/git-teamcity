@@ -38,12 +38,12 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       new FetchCommand(configuration).run();
     }
     LogCommand getLog = new LogCommand(configuration);
-    Collection<Commit> commitLog = getLog.run();
-    if (commitLog.isEmpty()) {
+    Collection<Commit> revs = getLog.run();
+    if (revs.isEmpty()) {
       log.warn("No Current Version");
       return null;
     }
-    String currentVersion = commitLog.iterator().next().getVersion().toString();
+    String currentVersion = revs.iterator().next().getVersion().toString();
     log.warn("Current Version: " + currentVersion);
     return currentVersion;
   }
@@ -55,6 +55,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String toVersion, IncludeRule includeRule) throws VcsException {
     log.warn(String.format("%s: collecting build changes from %s to %s", root.getVcsName(), fromVersion, toVersion));
     List<ModificationData> modifications = new ArrayList<ModificationData>();
+    GitConfiguration configuration = GitConfiguration.createServerConfiguration(root);
     return modifications;
   }
 

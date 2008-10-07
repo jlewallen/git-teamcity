@@ -12,6 +12,7 @@ import jetbrains.buildServer.vcs.VcsException;
 import org.hivedb.teamcity.plugin.Commit;
 import org.hivedb.teamcity.plugin.Constants;
 import org.hivedb.teamcity.plugin.GitConfiguration;
+import org.hivedb.teamcity.plugin.VersionNumber;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 
@@ -24,6 +25,15 @@ public class LogCommand extends GitCommand {
   public Collection<Commit> run() throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
+    cli.addParameter(getConfiguration().getRef());
+    return parseCommitLog(exec(cli).getStdout());
+  }
+  
+  public Collection<Commit> run(VersionNumber from, VersionNumber to)throws VcsException { 
+    GeneralCommandLine cli = createCommandLine();
+    cli.addParameter("log");
+    cli.addParameter(from.getHash());
+    cli.addParameter(to.getHash());
     return parseCommitLog(exec(cli).getStdout());
   }
 

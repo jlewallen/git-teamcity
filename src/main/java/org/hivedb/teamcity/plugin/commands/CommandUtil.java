@@ -33,10 +33,10 @@ public class CommandUtil {
 
   public static ExecResult runCommand(@NotNull GeneralCommandLine cli) throws VcsException {
     String cmdStr = cli.getCommandLineString();
-    Loggers.VCS.debug("Run command: " + cmdStr);
+    Loggers.VCS.info("Run Command: " + cmdStr);
     ExecResult res = SimpleCommandLineProcessRunner.runCommand(cli, null, new SimpleCommandLineProcessRunner.NoOutputTimeoutRunCommandEventsAdapter());
     CommandUtil.checkCommandFailed(cmdStr, res);
-    Loggers.VCS.debug(res.getStdout());
+    Loggers.VCS.info(res.getStdout());
     return res;
   }
 }
