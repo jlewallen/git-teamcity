@@ -1,5 +1,7 @@
 package org.hivedb.teamcity.plugin;
 
+import java.io.File;
+
 import jetbrains.buildServer.vcs.*;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import jetbrains.buildServer.Used;
@@ -90,19 +92,22 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public String getCurrentVersion(VcsRoot root) throws VcsException {
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
     logVcsRoot(root);
-//    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
-//      git(root).clone(root.getProperty(PROJECT_NAME),root.getProperty(CLONE_URL), root.getProperty(WORKING_DIRECTORY));
+    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
+      git(root).clone(root.getProperty(CLONE_URL));
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;
     if(!commits.isEmpty()) {
       currentVersion = commits.iterator().next().getVersion();
       log.warn("Current Version: " + currentVersion);
     }
+    else {
+      log.warn("No Current Version");
+    }
     return currentVersion;
   }
 
   public String describeVcsRoot(VcsRoot vcsRoot) {
-    return String.format("%s: %s", vcsRoot.getProperty(GIT_COMMAND), vcsRoot.getProperty(WORKING_DIRECTORY));
+    return String.format("%s: %s", getGitCommand(vcsRoot), vcsRoot.getProperty(WORKING_DIRECTORY));
   }
 
   public boolean isTestConnectionSupported() {
@@ -119,6 +124,14 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     p.put(GIT_COMMAND, "/usr/bin/env git");
     p.put(WORKING_DIRECTORY, "./");
     return p;
+  }
+
+  private String[] getGitCommand(VcsRoot vcsRoot) {
+    String path = vcsRoot.getProperty(GIT_COMMAND);
+    if (new File(path).exists()) {
+      return new String[] { path };
+    }
+    return new String[] { "/usr/bin/git" };
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
@@ -143,7 +156,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   private Git git(VcsRoot root) {
-    return new Git(root.getProperty(GIT_COMMAND), root.getProperty(WORKING_DIRECTORY), root.getProperty(PROJECT_NAME));
+    return new Git(getGitCommand(root), root.getProperty(WORKING_DIRECTORY), root.getProperty(PROJECT_NAME));
   }
 
   public boolean isAgentSideCheckoutAvailable() {
@@ -160,6 +173,8 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot vcsRoot, String s, String s1, IncludeRule includeRule) throws VcsException {
-    throw new UnsupportedOperationException();
+    List<ModificationData> modifications = new ArrayList<ModificationData>();
+    log.info("collectBuildChanges: " + s + ", " + s1);
+    return modifications;
   }
 }

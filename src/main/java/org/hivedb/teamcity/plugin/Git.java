@@ -17,18 +17,22 @@ public class Git {
   Logger log = Logger.getLogger(Git.class);
 
   File workingDirectory;
-  String gitCommand, projectName;
+  String[] gitCommand;
+  String projectName;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
-  public Git(String cmd, String workingDirectory, String projectName) {
+  public Git(String[] cmd, String workingDirectory, String projectName) {
     this.gitCommand = cmd;
     this.projectName = projectName;
     this.workingDirectory = new File(workingDirectory);
+    if (this.projectName == null) {
+      this.projectName = "ProjectNameIsMissing";
+    }
   }
 
   public Collection<String> revList(String rev1, String rev2) {
     String log = runCommand(
-      new String[]{getGitCommand(), "rev-list", String.format("%s...%s", rev1, rev2)},
+      getGitCommand(new String[]{"rev-list", String.format("%s...%s", rev1, rev2)}),
       new String[]{},
       getProjectDirectory()
     );
@@ -37,7 +41,7 @@ public class Git {
 
   public Collection<Commit> log(int n) {
     String log = runCommand(
-      new String[]{getGitCommand(), "log", "-n", new Integer(n).toString()},
+      getGitCommand(new String[]{"log", "-n", new Integer(n).toString()}),
       new String[]{},
       getProjectDirectory()
     );
@@ -46,7 +50,7 @@ public class Git {
 
   public String show(String rev, String file) {
     return runCommand(
-      new String[]{getGitCommand(), "show", String.format("%s:%s", rev, file)},
+      getGitCommand(new String[]{"show", String.format("%s:%s", rev, file)}),
       new String[]{},
       getProjectDirectory()
     );
@@ -62,7 +66,7 @@ public class Git {
 
   public String clone(String url) {
     return runCommand(
-      new String[]{getGitCommand(), "clone", url, getProjectDirectory().getAbsolutePath()},
+      getGitCommand(new String[]{"clone", url, getProjectDirectory().getAbsolutePath()}),
       new String[]{},
       workingDirectory
     );
@@ -87,11 +91,19 @@ public class Git {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    log.info(output.toString());
     return output.toString();
   }
 
-  public String getGitCommand() {
-    return gitCommand;
+  public String[] getGitCommand(String[] parameters) {
+    String[] argz = new String[parameters.length + gitCommand.length];
+    for (int i = 0; i < gitCommand.length; ++i) {
+      argz[i] = gitCommand[i];
+    }
+    for (int i = 0; i < parameters.length; ++i) {
+      argz[gitCommand.length + i] = parameters[i];
+    }
+    return argz;
   }
 
   private Collection<Commit> parseCommitLog(String log) {
