@@ -48,13 +48,13 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     log.warn("Type: " + root.getVcsName());
     log.warn("Root Version: " + root.getRootVersion());
     Map<String,String> p = root.getProperties();
-    for(Map.Entry<String, String> entry : p.entrySet())
+    for (Map.Entry<String, String> entry : p.entrySet())
       log.warn(String.format("%s: %s", entry.getKey(), entry.getValue()));
   }
 
   @NotNull
   public byte[] getContent(VcsModification vcsModification, VcsChangeInfo change, VcsChangeInfo.ContentType contentType, VcsRoot vcsRoot) throws VcsException {
-    if(change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED )
+    if (change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED )
       return new byte[]{};
     else {
       String rev = contentType == VcsChangeInfo.ContentType.BEFORE_CHANGE ? change.getBeforeChangeRevisionNumber() : change.getAfterChangeRevisionNumber();
@@ -92,11 +92,12 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public String getCurrentVersion(VcsRoot root) throws VcsException {
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
     logVcsRoot(root);
-    if(!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY)))
+    if (!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY))) {
       git(root).clone(root.getProperty(CLONE_URL));
+    }
     Collection<Commit> commits = git(root).log(1);
     String currentVersion = null;
-    if(!commits.isEmpty()) {
+    if (!commits.isEmpty()) {
       currentVersion = commits.iterator().next().getVersion().toString();
       log.warn("Current Version: " + currentVersion);
     }
@@ -137,8 +138,9 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
     String displayName = null;
     Collection<Commit> commits = git(root).log(1);
-    if(!commits.isEmpty())
+    if (!commits.isEmpty()) {
       displayName = commits.iterator().next().toString();
+    }
     log.info("getVersionDisplayName: " + version + " = " + displayName);
     return version;
   }
@@ -172,7 +174,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   @Nullable
   public String mapFullPath(VcsRoot vcsRoot, String s) {
     String workingDirectory = vcsRoot.getProperty(WORKING_DIRECTORY);
-    if(workingDirectory.endsWith("/") && s.startsWith("/"))
+    if (workingDirectory.endsWith("/") && s.startsWith("/"))
       return workingDirectory + s.substring(1);
     else
       return workingDirectory + s;

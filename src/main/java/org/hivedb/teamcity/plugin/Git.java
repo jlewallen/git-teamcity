@@ -126,18 +126,18 @@ public class Git {
       Commit current = new Commit();
       while((line = r.readLine()) != null) {
         String s = line.trim();
-        if( s == null || "".equals(s))
+        if (s == null || "".equals(s))
           continue;
         else {
-          if(s.startsWith("commit")) {
-            if(current.isValid()) {
+          if (s.startsWith("commit")) {
+            if (current.isValid()) {
               commits.add(current);
               current = new Commit();
             }
             current.setId(s.replaceAll("commit", "").trim());
-          } else if(s.startsWith("Author"))
+          } else if (s.startsWith("Author"))
             current.setAuthor(s.replaceAll("Author:","").trim());
-          else if(s.startsWith("Date")){
+          else if (s.startsWith("Date")){
             String dateString = s.replaceAll("Date:","").trim();
             SimpleDateFormat format = new SimpleDateFormat(GIT_DATE_FORMAT);
             current.setDate(format.parse(dateString));
