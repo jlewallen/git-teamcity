@@ -157,7 +157,12 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   private Git git(VcsRoot root) {
-    return new Git(getGitCommand(root), root.getProperty(WORKING_DIRECTORY), root.getProperty(PROJECT_NAME));
+    String projectName = root.getProperty(PROJECT_NAME);
+    if (projectName == null) {
+      projectName = "ProjectNameIsMissing";
+    }
+    File projectDirectory = new File(root.getProperty(WORKING_DIRECTORY), projectName);
+    return new Git(getGitCommand(root), root.getProperty(WORKING_DIRECTORY), projectDirectory.getAbsolutePath());
   }
 
   public boolean isAgentSideCheckoutAvailable() {

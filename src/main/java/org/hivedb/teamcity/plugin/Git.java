@@ -17,24 +17,21 @@ public class Git {
   Logger log = Logger.getLogger(Git.class);
 
   File workingDirectory;
+  File projectDirectory;
   String[] gitCommand;
-  String projectName;
   public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
 
-  public Git(String[] cmd, String workingDirectory, String projectName) {
+  public Git(String[] cmd, String workingDirectory, String projectDirectory) {
     this.gitCommand = cmd;
-    this.projectName = projectName;
     this.workingDirectory = new File(workingDirectory);
-    if (this.projectName == null) {
-      this.projectName = "ProjectNameIsMissing";
-    }
+    this.projectDirectory = new File(projectDirectory);
   }
 
   public Collection<String> revList(String rev1, String rev2) {
     String log = runCommand(
       getGitCommand(new String[]{"rev-list", String.format("%s...%s", rev1, rev2)}),
       new String[]{},
-      getProjectDirectory()
+      projectDirectory
     );
     return Arrays.asList(log.split("\n"));
   }
@@ -43,7 +40,7 @@ public class Git {
     String log = runCommand(
       getGitCommand(new String[]{"log", "-n", new Integer(n).toString()}),
       new String[]{},
-      getProjectDirectory()
+      projectDirectory
     );
     return parseCommitLog(log);
   }
@@ -52,12 +49,8 @@ public class Git {
     return runCommand(
       getGitCommand(new String[]{"show", String.format("%s:%s", rev, file)}),
       new String[]{},
-      getProjectDirectory()
+      projectDirectory
     );
-  }
-
-  public File getProjectDirectory() {
-    return new File(workingDirectory,this.projectName);
   }
 
   public boolean isGitRepo(String dir) {
@@ -66,7 +59,7 @@ public class Git {
 
   public String clone(String url) {
     return runCommand(
-      getGitCommand(new String[]{"clone", url, getProjectDirectory().getAbsolutePath()}),
+      getGitCommand(new String[]{"clone", url, projectDirectory.getAbsolutePath()}),
       new String[]{},
       workingDirectory
     );
@@ -91,6 +84,7 @@ public class Git {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    log.info(output.toString());
     return output.toString();
   }
 
