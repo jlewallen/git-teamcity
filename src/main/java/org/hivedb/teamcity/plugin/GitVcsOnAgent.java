@@ -17,8 +17,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   public GitVcsOnAgent(BuildAgentConfiguration agentConf) {
   }
 
-  public void updateSources(BuildProgressLogger logger, File workingDirectory, VcsRoot root, String newVersion, IncludeRule includeRule)
-   throws VcsException {
+  public void updateSources(BuildProgressLogger logger, File workingDirectory, VcsRoot root, String version, IncludeRule includeRule) throws VcsException {
     GitConfiguration configuration = GitConfiguration.createAgentConfiguration(root, workingDirectory);
     if (!configuration.isProjectDirectoryARepository()) {
       workingDirectory.delete();

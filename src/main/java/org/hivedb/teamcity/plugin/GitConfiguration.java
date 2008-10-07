@@ -77,4 +77,8 @@ public class GitConfiguration {
     }
     throw new RuntimeException("Unable to infer path to Git executable!");
   }
+  
+  public String toString() {
+    return String.format("%s:%s", this.url, this.ref);
+  }
 }
