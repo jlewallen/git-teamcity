@@ -16,14 +16,15 @@ import org.apache.log4j.Logger;
 public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   Logger log = Logger.getLogger(GitVcsOnAgent.class);
 
+  public GitVcsOnAgent(BuildAgentConfiguration agentConf) {
+  }
+
   public void updateSources(BuildProgressLogger logger, File workingDirectory, VcsRoot root, String newVersion, IncludeRule includeRule)
-   throws VcsException
-  {
+   throws VcsException {
     log.info("updateSources: " + workingDirectory + " " + newVersion);
   }
 
-  public String getName()
-  {
+  public String getName() {
     return "git";
   }
 }
