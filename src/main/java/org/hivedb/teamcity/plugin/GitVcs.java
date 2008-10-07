@@ -146,10 +146,6 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     return this;
   }
 
-  private boolean nullOrEmpty(Object o) {
-    return o == null || "".equals(o);
-  }
-
   private Git git(VcsRoot root) {
     String projectName = root.getProperty(PROJECT_NAME);
     if (projectName == null) {

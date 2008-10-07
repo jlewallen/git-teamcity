@@ -1,16 +1,12 @@
 package org.hivedb.teamcity.plugin;
 
-import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import jetbrains.buildServer.ExecResult;
 
 import java.io.*;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Hashtable;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -77,45 +73,7 @@ public class Git {
     );
   }
 
-  private String unixRun(String[] argz, String[] environment, File workingDirectory) {
-    Process cmdProc = null;
-    try {
-      cmdProc = Runtime.getRuntime().exec(argz, environment, workingDirectory);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    BufferedReader in = new BufferedReader(new InputStreamReader(cmdProc.getInputStream()));
-    StringBuilder output = new StringBuilder();
-    String line;
-    try {
-      while((line = in.readLine()) != null) {
-        output.append(line);
-        log.info(line.toString());
-        output.append("\n");
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    BufferedReader errorStream = new BufferedReader(new InputStreamReader(cmdProc.getErrorStream()));
-    StringBuilder error = new StringBuilder();
-    try {
-      while((line = errorStream.readLine()) != null) {
-        error.append(line);
-        log.info(line.toString());
-        error.append("\n");
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    return output.toString();
-  }
-
   private String runCommand(String[] argz, String[] environment, File workingDirectory) {
-    /*
-    if (argz[0].indexOf("Program") < 0) {
-      return unixRun(argz, environment, workingDirectory);
-    }
-    */
     GeneralCommandLine cli = new GeneralCommandLine();
     cli.setExePath(argz[0]);
     cli.setWorkDirectory(workingDirectory.getAbsolutePath());

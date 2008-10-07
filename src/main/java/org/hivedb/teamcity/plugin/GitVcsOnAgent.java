@@ -1,13 +1,8 @@
 package org.hivedb.teamcity.plugin;
 
 import java.io.File;
-import java.util.*;
-import java.io.IOException;
-import java.net.*;
 
-import jetbrains.buildServer.util.*;
 import jetbrains.buildServer.vcs.*;
-import jetbrains.buildServer.CollectChangesByIncludeRule;
 import jetbrains.buildServer.agent.vcs.CheckoutOnAgentVcsSupport;
 import jetbrains.buildServer.agent.BuildAgentConfiguration;
 import jetbrains.buildServer.agent.BuildProgressLogger;
@@ -17,7 +12,6 @@ import org.apache.log4j.Logger;
 public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   Logger log = Logger.getLogger(GitVcsOnAgent.class);
 
-  private static final String GIT_COMMAND = "git_command";
   private static final String CLONE_URL = "clone_url";
 
   public GitVcsOnAgent(BuildAgentConfiguration agentConf) {

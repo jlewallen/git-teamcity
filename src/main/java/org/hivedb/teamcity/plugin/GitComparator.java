@@ -1,7 +1,6 @@
 package org.hivedb.teamcity.plugin;
 
 import java.util.Comparator;
-import java.util.Collection;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
