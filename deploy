@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./pkg
+sudo cp target/gitAgent.zip /storage/TeamCity/webapps/ROOT/update/plugins
+sudo cp target/git-vcs.jar /storage/TeamCity/webapps/ROOT/WEB-INF/lib/

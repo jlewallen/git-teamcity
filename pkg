@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pushd target
+mkdir -p gitAgent/lib
+cp ../src/build-agent-plugin.xml gitAgent
+cp *.jar gitAgent/lib
+zip -r gitAgent.zip gitAgent
+rm -rf gitAgent
+popd
