@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -44,13 +43,12 @@ public class LogCommand extends GitCommand {
               commits.add(current);
               current = new Commit();
             }
-            current.setId(s.replaceAll("commit", "").trim());
+            current.setHash(s.replaceAll("commit", "").trim());
           } else if (s.startsWith("Author"))
             current.setAuthor(s.replaceAll("Author:","").trim());
           else if (s.startsWith("Date")) {
             String dateString = s.replaceAll("Date:","").trim();
-            SimpleDateFormat format = new SimpleDateFormat(Constants.GIT_DATE_FORMAT);
-            current.setDate(format.parse(dateString));
+            current.setDate(Constants.GIT_DATE.parse(dateString));
           } else {
             current.setMessage(s);
             commits.add(current);
