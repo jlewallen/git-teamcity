@@ -11,6 +11,7 @@ public class GitConfiguration {
   File projectDirectory;
   File command;
   String url;
+  String ref;
 
   public File getWorkingDirectory() {
     return workingDirectory;
@@ -27,30 +28,39 @@ public class GitConfiguration {
   public String getUrl() {
     return url;
   }
+  
+  public String getRef() {
+    return ref;
+  }
+
+  public void setRef(String ref) {
+    this.ref = ref;
+  }
 
   public boolean isProjectDirectoryARepository() {
     return new File(getProjectDirectory(), ".git").exists();
   }
 
-  public GitConfiguration(File command, File workingDirectory, File projectDirectory, String url) {
+  public GitConfiguration(File command, File workingDirectory, File projectDirectory, String url, String ref) {
     super();
     this.command = command;
     this.workingDirectory = workingDirectory;
     this.projectDirectory = projectDirectory;
     this.url = url;
+    this.ref = ref;
   }
   
   public static GitConfiguration createAgentConfiguration(VcsRoot root, File project) {
     File working = project.getParentFile();
     String url = root.getProperty(CLONE_URL);
-    return new GitConfiguration(inferGitCommand(), working, project, url);
+    return new GitConfiguration(inferGitCommand(), working, project, url, "master");
   }
   
   public static GitConfiguration createServerConfiguration(VcsRoot root) {
     File working = new File("/tmp/git-teamcity");
     File project = new File("/tmp/git-teamcity/project");
     String url = root.getProperty(CLONE_URL);
-    return new GitConfiguration(inferGitCommand(), working, project, url);
+    return new GitConfiguration(inferGitCommand(), working, project, url, "master");
   }
 
   private static File inferGitCommand() {

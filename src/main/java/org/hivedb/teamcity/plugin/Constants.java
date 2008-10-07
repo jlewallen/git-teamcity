@@ -1,0 +1,11 @@
+package org.hivedb.teamcity.plugin;
+
+import java.text.SimpleDateFormat;
+
+public class Constants {
+  
+  public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
+  public static final String VERSION_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
+  public static final SimpleDateFormat VERSION_DATE = new SimpleDateFormat(Constants.VERSION_DATE_FORMAT);
+
+}

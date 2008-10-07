@@ -1,4 +1,4 @@
-package org.hivedb.teamcity.plugin;
+package org.hivedb.teamcity.plugin.commands;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 import jetbrains.buildServer.ExecResult;

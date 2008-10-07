@@ -11,14 +11,13 @@ import java.util.Collection;
 import jetbrains.buildServer.vcs.VcsException;
 
 import org.hivedb.teamcity.plugin.Commit;
+import org.hivedb.teamcity.plugin.Constants;
 import org.hivedb.teamcity.plugin.GitConfiguration;
 
 import com.intellij.execution.configurations.GeneralCommandLine;
 
 public class LogCommand extends GitCommand {
 
-  public static final String GIT_DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy Z";
-  
   public LogCommand(GitConfiguration configuration) {
     super(configuration);
   }
@@ -35,7 +34,7 @@ public class LogCommand extends GitCommand {
     String line;
     try {
       Commit current = new Commit();
-      while((line = r.readLine()) != null) {
+      while ((line = r.readLine()) != null) {
         String s = line.trim();
         if (s == null || "".equals(s))
           continue;
@@ -50,7 +49,7 @@ public class LogCommand extends GitCommand {
             current.setAuthor(s.replaceAll("Author:","").trim());
           else if (s.startsWith("Date")) {
             String dateString = s.replaceAll("Date:","").trim();
-            SimpleDateFormat format = new SimpleDateFormat(GIT_DATE_FORMAT);
+            SimpleDateFormat format = new SimpleDateFormat(Constants.GIT_DATE_FORMAT);
             current.setDate(format.parse(dateString));
           } else {
             current.setMessage(s);
@@ -59,9 +58,11 @@ public class LogCommand extends GitCommand {
           }
         }
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       throw new RuntimeException(e);
-    } catch (ParseException e) {
+    }
+    catch (ParseException e) {
       throw new RuntimeException(e);
     }
     return commits;

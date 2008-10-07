@@ -5,10 +5,12 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class Commit {
-  public static final String VERSION_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
-  private SimpleDateFormat format = new SimpleDateFormat(VERSION_DATE_FORMAT);
+  String id, author, message;
+  Date date;
 
-  public Commit(){}
+  public Commit() {
+  }
+
   public Commit(String id, String author, Date date) {
     this.id = id;
     this.author = author;
@@ -48,7 +50,7 @@ public class Commit {
   }
 
   public VersionNumber getVersion() {
-    return new VersionNumber(String.format("%s - %s", getId(), format.format(getDate())));
+    return new VersionNumber(getId(), getDate());
   }
 
   @Override
@@ -56,7 +58,7 @@ public class Commit {
     StringBuilder s = new StringBuilder();
     s.append("commit ").append(this.getId()).append("\n");
     s.append("Author: ").append(this.getAuthor()).append("\n");
-    s.append("Date: ").append(new SimpleDateFormat(Git.GIT_DATE_FORMAT).format(this.getDate())).append("\n");
+    s.append("Date: ").append(new SimpleDateFormat(Constants.GIT_DATE_FORMAT).format(this.getDate())).append("\n");
     s.append("\n\t").append(this.getMessage());
     return s.toString();
   }
@@ -64,6 +66,4 @@ public class Commit {
   public boolean isValid() {
     return this.author != null && this.date != null && this.id != null;
   }
-  String id, author, message;
-  Date date;
 }

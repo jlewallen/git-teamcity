@@ -6,7 +6,6 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 
 import jetbrains.buildServer.vcs.VcsException;
 
-import org.hivedb.teamcity.plugin.CommandUtil;
 import org.hivedb.teamcity.plugin.GitConfiguration;
 
 public class GitCommand {
