@@ -1,0 +1,3 @@
+<container>
+  <component class="org.hivedb.teamcity.plugin.GitVcs" />
+</container>
