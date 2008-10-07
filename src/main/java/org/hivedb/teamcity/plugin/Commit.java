@@ -1,9 +1,12 @@
 package org.hivedb.teamcity.plugin;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class Commit {
+  Collection<NameAndStatus> changes = new ArrayList<NameAndStatus>();
   String hash, author, message;
   Date date;
 
@@ -14,6 +17,10 @@ public class Commit {
     this.hash = hash;
     this.author = author;
     this.date = date;
+  }
+
+  public Collection<NameAndStatus> getChanges() {
+    return changes;
   }
 
   public String getHash() {
