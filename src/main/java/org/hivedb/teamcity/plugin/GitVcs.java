@@ -1,7 +1,5 @@
 package org.hivedb.teamcity.plugin;
 
-import java.io.File;
-
 import jetbrains.buildServer.vcs.*;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import jetbrains.buildServer.Used;
@@ -13,6 +11,9 @@ import jetbrains.buildServer.serverSide.InvalidProperty;
 import java.util.*;
 import java.io.IOException;
 
+import org.hivedb.teamcity.plugin.commands.CloneCommand;
+import org.hivedb.teamcity.plugin.commands.FetchCommand;
+import org.hivedb.teamcity.plugin.commands.LogCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.apache.log4j.Logger;
@@ -21,10 +22,8 @@ import jetbrains.buildServer.web.openapi.WebResourcesManager;
 public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport, CollectChangesByIncludeRule {
   Logger log = Logger.getLogger(GitVcs.class);
 
-  private static final String GIT_COMMAND = "git_command";
   private static final String WORKING_DIRECTORY = "working_directory";
   private static final String CLONE_URL = "clone_url";
-  private static final String PROJECT_NAME = "project_name";
 
   public GitVcs(VcsManager vcsmanager, WebResourcesManager resourcesManager) {
     vcsmanager.registerVcsSupport(this);
@@ -32,30 +31,20 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String currentVersion, CheckoutRules checkoutRules) throws VcsException {
-    log.warn(String.format("%s: Collecting build changes from %s to %s", root.getVcsName(), fromVersion, currentVersion));
-    logVcsRoot(root);
+    log.warn(String.format("%s: collecting build changes from %s to %s", root.getVcsName(), fromVersion, currentVersion));
     return VcsSupportUtil.collectBuildChanges(root, fromVersion, currentVersion, checkoutRules, this);
   }
 
   public void buildPatch(VcsRoot root, String fromVersion, String toVersion, PatchBuilder builder, CheckoutRules checkoutRules) throws IOException, VcsException {
-    log.warn(String.format("%s: Building patch from '%s' to '%s'", root.getVcsName(), fromVersion, toVersion));
-    logVcsRoot(root);
+    log.warn(String.format("%s: build patch from '%s' to '%s'", root.getVcsName(), fromVersion, toVersion));
     throw new UnsupportedOperationException("Nuh unh!");
-  }
-
-  private void logVcsRoot(VcsRoot root) {
-    log.warn("=== VcsRoot ===");
-    log.warn("Type: " + root.getVcsName());
-    log.warn("Root Version: " + root.getRootVersion());
-    Map<String,String> p = root.getProperties();
-    for (Map.Entry<String, String> entry : p.entrySet())
-      log.warn(String.format("%s: %s", entry.getKey(), entry.getValue()));
   }
 
   @NotNull
   public byte[] getContent(VcsModification vcsModification, VcsChangeInfo change, VcsChangeInfo.ContentType contentType, VcsRoot vcsRoot) throws VcsException {
-    if (change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED )
-      return new byte[]{};
+    if (change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED ) {
+      return new byte[] { };
+    }
     else {
       String rev = contentType == VcsChangeInfo.ContentType.BEFORE_CHANGE ? change.getBeforeChangeRevisionNumber() : change.getAfterChangeRevisionNumber();
       return getContent(change.getRelativeFileName(), vcsRoot, rev);
@@ -64,8 +53,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @NotNull
   public byte[] getContent(String filePath, VcsRoot versionedRoot, String version) throws VcsException {
-    String groomedVersion = version.split("-")[0].trim();
-    return git(versionedRoot).show(groomedVersion, filePath).getBytes();
+    return new byte[] { };
   }
 
   public String getName() {
@@ -91,19 +79,24 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
     log.warn(String.format("%s: Getting current version", root.getVcsName()));
-    logVcsRoot(root);
-    if (!git(root).isGitRepo(root.getProperty(WORKING_DIRECTORY))) {
-      git(root).clone(root.getProperty(CLONE_URL));
-    }
-    Collection<Commit> commits = git(root).log(1);
-    String currentVersion = null;
-    if (!commits.isEmpty()) {
-      currentVersion = commits.iterator().next().getVersion().toString();
-      log.warn("Current Version: " + currentVersion);
+    
+    GitConfiguration configuration = GitConfiguration.createServerConfiguration(root);
+    if (!configuration.isProjectDirectoryARepository()) {
+      CloneCommand cmd = new CloneCommand(configuration);
+      cmd.run();
     }
     else {
-      log.warn("No Current Version");
+      FetchCommand cmd = new FetchCommand(configuration);
+      cmd.run();
     }
+    LogCommand getLog = new LogCommand(configuration);
+    Collection<Commit> commitLog = getLog.run();
+    if (commitLog.isEmpty()) {
+      log.warn("No Current Version");
+      return null;
+    }
+    String currentVersion = commitLog.iterator().next().getVersion().toString();
+    log.warn("Current Version: " + currentVersion);
     return currentVersion;
   }
 
@@ -121,19 +114,10 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @Nullable
   public Map<String, String> getDefaultVcsProperties() {
-    Map<String,String> p = new HashMap<String,String>();
-    p.put(GIT_COMMAND, "/usr/bin/env git");
-    p.put(WORKING_DIRECTORY, "./");
-    return p;
+    return new HashMap<String,String>();
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
-    String displayName = null;
-    Collection<Commit> commits = git(root).log(1);
-    if (!commits.isEmpty()) {
-      displayName = commits.iterator().next().toString();
-    }
-    log.info("getVersionDisplayName: " + version + " = " + displayName);
     return version;
   }
 
@@ -146,26 +130,19 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     return this;
   }
 
-  private Git git(VcsRoot root) {
-    String projectName = root.getProperty(PROJECT_NAME);
-    if (projectName == null) {
-      projectName = "ProjectNameIsMissing";
-    }
-    File projectDirectory = new File(root.getProperty(WORKING_DIRECTORY), projectName);
-    return new Git(root.getProperty(WORKING_DIRECTORY), projectDirectory.getAbsolutePath());
-  }
-
   public boolean isAgentSideCheckoutAvailable() {
     return true;
   }
 
   @Nullable
-  public String mapFullPath(VcsRoot vcsRoot, String s) {
+  public String mapFullPath(VcsRoot vcsRoot, String path) {
     String workingDirectory = vcsRoot.getProperty(WORKING_DIRECTORY);
-    if (workingDirectory.endsWith("/") && s.startsWith("/"))
-      return workingDirectory + s.substring(1);
-    else
-      return workingDirectory + s;
+    if (workingDirectory.endsWith("/") && path.startsWith("/")) {
+      return workingDirectory + path.substring(1);
+    }
+    else {
+      return workingDirectory + path;
+    }
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot vcsRoot, String s, String s1, IncludeRule includeRule) throws VcsException {
