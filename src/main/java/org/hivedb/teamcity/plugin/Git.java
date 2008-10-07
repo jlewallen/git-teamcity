@@ -67,7 +67,7 @@ public class Git {
 
   private String runCommand(String[] argz, String[] environment, File workingDirectory) {
     Process cmdProc = null;
-    
+    log.info("Running " + argz[0] + " in " + workingDirectory);
     try {
       cmdProc = Runtime.getRuntime().exec(argz, environment, workingDirectory);
     } catch (IOException e) {
@@ -84,7 +84,18 @@ public class Git {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    BufferedReader errorStream = new BufferedReader(new InputStreamReader(cmdProc.getErrorStream()));
+    StringBuilder error = new StringBuilder();
+    try {
+      while((line = errorStream.readLine()) != null) {
+        error.append(line);
+        error.append("\n");
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     log.info(output.toString());
+    log.info(error.toString());
     return output.toString();
   }
 
