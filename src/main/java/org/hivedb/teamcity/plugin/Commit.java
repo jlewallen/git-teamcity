@@ -65,12 +65,7 @@ public class Commit {
 
   @Override
   public String toString() {
-    StringBuilder s = new StringBuilder();
-    s.append("commit ").append(getHash()).append("\n");
-    s.append("Author: ").append(getAuthor()).append("\n");
-    s.append("Date: ").append(Constants.GIT_DATE.format(getDate())).append("\n");
-    s.append("\n\t").append(getMessage());
-    return s.toString();
+    return "Commit<" + getHash() + ", " + getAuthor() + ", " + getDate() + ", NumberChanges=" + getChanges().size() + ", Version=" + getVersion() + ">";
   }
 
   public boolean isValid() {
