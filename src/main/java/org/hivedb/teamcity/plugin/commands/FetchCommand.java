@@ -15,7 +15,6 @@ public class FetchCommand extends GitCommand {
   public void run() throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("fetch");
-    cli.addParameter("-v");
     exec(cli); 
   }
 
