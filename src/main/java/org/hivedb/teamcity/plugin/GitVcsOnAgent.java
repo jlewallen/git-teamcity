@@ -9,6 +9,7 @@ import jetbrains.buildServer.agent.BuildProgressLogger;
 
 import org.apache.log4j.Logger;
 import org.hivedb.teamcity.plugin.commands.CheckoutCommand;
+import org.hivedb.teamcity.plugin.commands.CleanupCommand;
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
 import org.hivedb.teamcity.plugin.commands.FetchCommand;
 
@@ -30,6 +31,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
       cmd.run();
     }
     new CheckoutCommand(configuration).run(configuration.getRemoteBranch());
+    new CleanupCommand(configuration).everything();
   }
 
   public String getName() {
