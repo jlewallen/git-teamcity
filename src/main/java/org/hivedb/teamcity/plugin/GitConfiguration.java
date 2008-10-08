@@ -6,6 +6,8 @@ import jetbrains.buildServer.vcs.VcsRoot;
 
 public class GitConfiguration {
   public static final String CLONE_URL = "clone_url";
+  public static final String BRANCH = "branch";
+  public static final String SERVER_PROJECT_DIRECTORY = "server_project_directory";
   
   File workingDirectory;
   File projectDirectory;
@@ -40,7 +42,7 @@ public class GitConfiguration {
   public boolean isProjectDirectoryARepository() {
     return new File(getProjectDirectory(), ".git").exists();
   }
-
+  
   public GitConfiguration(File command, File workingDirectory, File projectDirectory, String url, String ref) {
     super();
     this.command = command;
@@ -53,14 +55,19 @@ public class GitConfiguration {
   public static GitConfiguration createAgentConfiguration(VcsRoot root, File project) {
     File working = project.getParentFile();
     String url = root.getProperty(CLONE_URL);
-    return new GitConfiguration(inferGitCommand(), working, project, url, "master");
+    String branch = root.getProperty(BRANCH);
+    return new GitConfiguration(inferGitCommand(), working, project, url, branch);
   }
   
   public static GitConfiguration createServerConfiguration(VcsRoot root) {
-    File working = new File("/tmp/git-teamcity");
-    File project = new File("/tmp/git-teamcity/project");
+    File project = new File(root.getProperty(SERVER_PROJECT_DIRECTORY));
+    File working = project.getParentFile();
+    if (!working.exists()) {
+      working.mkdirs();
+    }
     String url = root.getProperty(CLONE_URL);
-    return new GitConfiguration(inferGitCommand(), working, project, url, "master");
+    String branch = root.getProperty(BRANCH);
+    return new GitConfiguration(inferGitCommand(), working, project, url, branch);
   }
 
   private static File inferGitCommand() {

@@ -10,9 +10,14 @@
       <span class="error" id="error_clone_url"></span></td>
   </tr>
   <tr>
-    <th><label for="ref">Branch: <l:star/></label></th>
-    <td><props:textProperty name="ref" className="longField" maxlength="256" />
-      <span class="error" id="error_ref"></span></td>
+    <th><label for="branch">Branch: <l:star/></label></th>
+    <td><props:textProperty name="branch" className="longField" maxlength="256" />
+      <span class="error" id="error_branch"></span></td>
+  </tr>
+  <tr>
+    <th><label for="server_project_directory">Project Directory (Server): <l:star/></label></th>
+    <td><props:textProperty name="server_project_directory" className="longField" maxlength="256" />
+      <span class="error" id="error_server_project_directory"></span></td>
   </tr>
   </l:settingsGroup>
 
