@@ -11,7 +11,7 @@ public class CheckoutCommand extends GitCommand {
     super(configuration);
   }
   
-  public void run(String ref) throws VcsException {
+  public void forceCheckout(String ref) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("checkout");
     cli.addParameter("-f");
