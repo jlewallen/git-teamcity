@@ -33,6 +33,23 @@ public class VersionNumber {
   public Date getDate() {
     return this.date;
   }
+    
+  @Override
+  public int hashCode() {
+    return hash.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    VersionNumber other = (VersionNumber) obj;
+    return getHash().equals(other.getHash());
+  }
 
   @Override
   public String toString() {
