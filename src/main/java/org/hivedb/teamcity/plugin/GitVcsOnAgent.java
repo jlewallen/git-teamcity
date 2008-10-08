@@ -9,7 +9,7 @@ import jetbrains.buildServer.agent.BuildProgressLogger;
 
 import org.apache.log4j.Logger;
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
-import org.hivedb.teamcity.plugin.commands.FetchCommand;
+import org.hivedb.teamcity.plugin.commands.PullCommand;
 
 public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   Logger log = Logger.getLogger(GitVcsOnAgent.class);
@@ -25,7 +25,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
       cmd.run();
     }
     else {
-      FetchCommand cmd = new FetchCommand(configuration);
+      PullCommand cmd = new PullCommand(configuration);
       cmd.run();
     }
   }

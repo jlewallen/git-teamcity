@@ -12,8 +12,8 @@ import java.util.*;
 import java.io.IOException;
 
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
-import org.hivedb.teamcity.plugin.commands.FetchCommand;
 import org.hivedb.teamcity.plugin.commands.LogCommand;
+import org.hivedb.teamcity.plugin.commands.PullCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.apache.log4j.Logger;
@@ -35,7 +35,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       new CloneCommand(configuration).run();
     }
     else {
-      new FetchCommand(configuration).run();
+      new PullCommand(configuration).run();
     }
     LogCommand getLog = new LogCommand(configuration);
     Commit head = getLog.head();
