@@ -4,6 +4,8 @@ package org.hivedb.teamcity.plugin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Commit {
   Collection<NameAndStatus> changes = new ArrayList<NameAndStatus>();
@@ -73,5 +75,17 @@ public class Commit {
 
   public boolean isValid() {
     return this.author != null && this.date != null && this.hash != null;
+  }
+
+  public String getShortAuthor() {
+    Pattern pattern = Pattern.compile("(\\S+)@\\S+");
+    Matcher m = pattern.matcher(this.author);
+    if (m.find()) {
+      return m.group(1);
+    }
+    if (author.length() > 32) {
+      return author.substring(0, 32);
+    }
+    return author;
   }
 }
