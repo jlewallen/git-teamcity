@@ -35,7 +35,7 @@ public class LogCommand extends GitCommand {
   }
   
   public Commit head() throws VcsException {
-    return getSingle("HEAD");
+    return getSingle(getConfiguration().getRemoteBranch());
   }
   
   private Commit getSingle(String ref) throws VcsException {

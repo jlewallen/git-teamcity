@@ -34,6 +34,10 @@ public class GitConfiguration {
   public String getRef() {
     return ref;
   }
+  
+  public String getRemoteBranch() {
+    return "origin/" + getRef();
+  }
 
   public void setRef(String ref) {
     this.ref = ref;

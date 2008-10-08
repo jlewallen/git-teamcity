@@ -23,7 +23,7 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
     if (!configuration.isProjectDirectoryARepository()) {
       workingDirectory.delete();
       CloneCommand cmd = new CloneCommand(configuration);
-      cmd.run();
+      cmd.run(true);
     }
     else {
       PullCommand cmd = new PullCommand(configuration);

@@ -13,18 +13,19 @@ public class CheckoutCommand extends GitCommand {
     super(configuration);
   }
   
-  public void run() throws VcsException {
+  public void run(String ref) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("checkout");
-    cli.addParameter(getConfiguration().getRef());
+    cli.addParameter(ref);
     exec(cli); 
   }
   
+  public void run() throws VcsException {
+    run(getConfiguration().getRef());
+  }
+  
   public void run(VersionNumber version) throws VcsException {
-    GeneralCommandLine cli = createCommandLine();
-    cli.addParameter("checkout");
-    cli.addParameter(version.getHash());
-    exec(cli); 
+    run(version.getHash());
   }
 
 }

@@ -16,9 +16,12 @@ public class CloneCommand extends GitCommand {
     return false;
   }
 
-  public void run() throws VcsException {
+  public void run(boolean getWc) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("clone");
+    if (!getWc) {
+      cli.addParameter("-n");
+    }
     cli.addParameter(getConfiguration().getUrl());
     cli.addParameter(getConfiguration().getProjectDirectory().getAbsolutePath());
     exec(cli); 
