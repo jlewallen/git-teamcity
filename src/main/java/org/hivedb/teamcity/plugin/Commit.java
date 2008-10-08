@@ -73,7 +73,7 @@ public class Commit {
   }
 
   public String getShortAuthor() {
-    Pattern pattern = Pattern.compile("(\\S+)@\\S+");
+    Pattern pattern = Pattern.compile("([^\\s><]+)@\\S+");
     Matcher m = pattern.matcher(this.author);
     if (m.find()) {
       return m.group(1);
