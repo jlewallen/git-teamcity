@@ -9,7 +9,6 @@ import jetbrains.buildServer.agent.BuildProgressLogger;
 
 import org.apache.log4j.Logger;
 import org.hivedb.teamcity.plugin.commands.CheckoutCommand;
-import org.hivedb.teamcity.plugin.commands.CleanCommand;
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
 import org.hivedb.teamcity.plugin.commands.FetchCommand;
 
