@@ -19,11 +19,7 @@ public class CheckoutCommand extends GitCommand {
     cli.addParameter(ref);
     exec(cli); 
   }
-  
-  public void run() throws VcsException {
-    run(getConfiguration().getBranch());
-  }
-  
+    
   public void run(VersionNumber version) throws VcsException {
     run(version.getHash());
   }

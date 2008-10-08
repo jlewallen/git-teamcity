@@ -8,9 +8,9 @@ import jetbrains.buildServer.agent.BuildAgentConfiguration;
 import jetbrains.buildServer.agent.BuildProgressLogger;
 
 import org.apache.log4j.Logger;
+import org.hivedb.teamcity.plugin.commands.CheckoutCommand;
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
-import org.hivedb.teamcity.plugin.commands.CreateTrackingBranchesCommand;
-import org.hivedb.teamcity.plugin.commands.PullCommand;
+import org.hivedb.teamcity.plugin.commands.FetchCommand;
 
 public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
   Logger log = Logger.getLogger(GitVcsOnAgent.class);
@@ -23,13 +23,13 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
     if (!configuration.isProjectDirectoryARepository()) {
       workingDirectory.delete();
       CloneCommand cmd = new CloneCommand(configuration);
-      cmd.run(true);
+      cmd.run(false);
     }
     else {
-      PullCommand cmd = new PullCommand(configuration);
+      FetchCommand cmd = new FetchCommand(configuration);
       cmd.run();
     }
-    new CreateTrackingBranchesCommand(configuration).run();
+    new CheckoutCommand(configuration).run(configuration.getRemoteBranch());
   }
 
   public String getName() {
