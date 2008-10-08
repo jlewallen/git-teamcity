@@ -28,7 +28,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public String getCurrentVersion(VcsRoot root) throws VcsException {
-    log.warn(String.format("%s: Getting current version", root.getVcsName()));
+    log.warn("Getting current version");
     
     GitConfiguration configuration = GitConfiguration.createServerConfiguration(root);
     if (!configuration.isProjectDirectoryARepository()) {
@@ -40,19 +40,20 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     LogCommand getLog = new LogCommand(configuration);
     Commit head = getLog.head();
     if (head == null) {
-      log.warn("No Current Version");
+      log.warn("No current version!");
       return null;
     }
-    log.warn("Current Version: " + head);
+    log.warn("Version: " + head);
     return head.getVersion().toString();
   }
 
   public String getVersionDisplayName(String version, VcsRoot root) throws VcsException {
+    log.warn("Getting version display name: " + version);
     return version;
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String toVersion, IncludeRule includeRule) throws VcsException {
-    log.warn(String.format("%s: collecting build changes from %s to %s", root.getVcsName(), fromVersion, toVersion));
+    log.warn(String.format("Getting build changes from %s to %s", fromVersion, toVersion));
     List<ModificationData> modifications = new ArrayList<ModificationData>();
     VersionNumber from = new VersionNumber(fromVersion);
     VersionNumber to = new VersionNumber(toVersion);
@@ -78,7 +79,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   }
 
   public void buildPatch(VcsRoot root, String fromVersion, String toVersion, PatchBuilder builder, CheckoutRules checkoutRules) throws IOException, VcsException {
-    log.warn(String.format("%s: build patch from '%s' to '%s'", root.getVcsName(), fromVersion, toVersion));
+    log.warn(String.format("Patch from %s to %s", fromVersion, toVersion));
     throw new UnsupportedOperationException();
   }
 
