@@ -12,6 +12,7 @@ import java.util.*;
 import java.io.IOException;
 
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
+import org.hivedb.teamcity.plugin.commands.CreateTrackingBranchesCommand;
 import org.hivedb.teamcity.plugin.commands.LogCommand;
 import org.hivedb.teamcity.plugin.commands.PullCommand;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     else {
       new PullCommand(configuration).run();
     }
+    new CreateTrackingBranchesCommand(configuration).run();
     LogCommand getLog = new LogCommand(configuration);
     Commit head = getLog.head();
     if (head == null) {

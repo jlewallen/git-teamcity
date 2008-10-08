@@ -20,8 +20,8 @@ public class LogOutput {
     
     Collection<Commit> commits = new ArrayList<Commit>();
     BufferedReader r = new BufferedReader(new StringReader(log));
-    String line;
     try {
+      String line;
       Commit current = new Commit();
       while ((line = r.readLine()) != null) {
         if (line == null || line.trim().equals(""))
