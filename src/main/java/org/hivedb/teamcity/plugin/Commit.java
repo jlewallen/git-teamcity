@@ -11,12 +11,14 @@ public class Commit {
   Date date;
 
   public Commit() {
+    this.message = "";
   }
 
   public Commit(String hash, String author, Date date) {
     this.hash = hash;
     this.author = author;
     this.date = date;
+    this.message = "";
   }
 
   public Collection<NameAndStatus> getChanges() {
