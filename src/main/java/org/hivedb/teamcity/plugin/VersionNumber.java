@@ -51,7 +51,7 @@ public class VersionNumber {
 
   @Override
   public String toString() {
-    String datePart = " " + Constants.VERSION_DATE.format(date);
+    String datePart = "-" + Constants.VERSION_DATE.format(date);
     String hashPart = hash.substring(0, MAXIMUM_LENGTH - datePart.length());
     return String.format("%s%s", hashPart, datePart);
   }
