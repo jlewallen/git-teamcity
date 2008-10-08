@@ -40,7 +40,7 @@ public class LogOutput {
             String dateString = line.replaceAll("Date:", "").trim();
             current.setDate(Constants.GIT_DATE.parse(dateString));
           }
-          else if (line.startsWith("\\t")) {
+          else if (line.startsWith("    ")) {
             current.setMessage(current.getMessage() + "\n" + line);
           }
           else {
