@@ -10,6 +10,7 @@ import org.hivedb.teamcity.plugin.GitConfiguration;
 
 public class GitCommand {
 
+  static final Integer FIVE_MINUTES = 60 * 5;
   GitConfiguration configuration;
 
   public GitConfiguration getConfiguration() {
@@ -33,7 +34,11 @@ public class GitCommand {
   }
 	
   protected ExecResult exec(GeneralCommandLine cli) throws VcsException {
-    return CommandUtil.runCommand(cli);
+    return CommandUtil.runCommand(cli, getTimeout());
+  }
+  
+  protected Integer getTimeout() {
+    return FIVE_MINUTES;
   }
   
 }

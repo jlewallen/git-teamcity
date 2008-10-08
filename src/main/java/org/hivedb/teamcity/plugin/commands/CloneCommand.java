@@ -15,6 +15,10 @@ public class CloneCommand extends GitCommand {
   protected boolean useProjectDirectory() {
     return false;
   }
+  
+  protected Integer getTimeout() {
+    return 0;
+  }
 
   public void run(boolean getWc) throws VcsException {
     GeneralCommandLine cli = createCommandLine();

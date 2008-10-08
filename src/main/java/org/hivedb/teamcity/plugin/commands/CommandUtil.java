@@ -3,6 +3,7 @@ package org.hivedb.teamcity.plugin.commands;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import jetbrains.buildServer.ExecResult;
 import jetbrains.buildServer.SimpleCommandLineProcessRunner;
+import jetbrains.buildServer.SimpleCommandLineProcessRunner.RunCommandEvents;
 import jetbrains.buildServer.log.Loggers;
 import jetbrains.buildServer.util.StringUtil;
 import jetbrains.buildServer.vcs.VcsException;
@@ -31,12 +32,31 @@ public class CommandUtil {
     throw new VcsException(message);
   }
 
-  public static ExecResult runCommand(@NotNull GeneralCommandLine cli) throws VcsException {
+  public static ExecResult runCommand(@NotNull GeneralCommandLine cli, Integer timeout) throws VcsException {
     String cmdStr = cli.getCommandLineString();
     Loggers.VCS.info("Run Command: " + cmdStr);
-    ExecResult res = SimpleCommandLineProcessRunner.runCommand(cli, null, new SimpleCommandLineProcessRunner.NoOutputTimeoutRunCommandEventsAdapter());
+    ExecResult res = SimpleCommandLineProcessRunner.runCommand(cli, null, new OurRunCommandEvents(timeout));
     CommandUtil.checkCommandFailed(cmdStr, res);
     Loggers.VCS.info(res.getStdout());
     return res;
+  }
+  
+  public static class OurRunCommandEvents implements RunCommandEvents {
+    Integer timeout;
+    
+    public OurRunCommandEvents(Integer timeout) {
+      super();
+      this.timeout = timeout;
+    }
+
+    public Integer getOutputIdleSecondsTimeout() {
+      return Integer.valueOf(this.timeout);
+    }
+
+    public void onProcessFinished(Process arg0) {
+    }
+
+    public void onProcessStarted(Process arg0) {
+    }
   }
 }
