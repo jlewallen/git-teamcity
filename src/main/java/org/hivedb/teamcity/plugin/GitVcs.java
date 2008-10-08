@@ -54,10 +54,13 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String toVersion, IncludeRule includeRule) throws VcsException {
     log.warn(String.format("%s: collecting build changes from %s to %s", root.getVcsName(), fromVersion, toVersion));
     List<ModificationData> modifications = new ArrayList<ModificationData>();
-    GitConfiguration configuration = GitConfiguration.createServerConfiguration(root);
-    LogCommand logCommand = new LogCommand(configuration);
     VersionNumber from = new VersionNumber(fromVersion);
     VersionNumber to = new VersionNumber(toVersion);
+    if (from.equals(to)) {
+      return modifications;
+    }
+    GitConfiguration configuration = GitConfiguration.createServerConfiguration(root);
+    LogCommand logCommand = new LogCommand(configuration);
     for (Commit commit : logCommand.between(from, to)) {
       log.info(commit);
       List<VcsChange> vcsChanged = new ArrayList<VcsChange>();
