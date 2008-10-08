@@ -22,9 +22,11 @@ public class LogCommand extends GitCommand {
     cli.addParameter("--name-status");
     if (from.equals(to)) {
       cli.addParameter("-1");      
+      cli.addParameter(from.getHash());
     }
-    cli.addParameter(from.getHash());
-    cli.addParameter(to.getHash());
+    else {
+      cli.addParameter(from.getHash() + ".." + to.getHash());
+    }
     return LogOutput.parse(exec(cli).getStdout());
   }
 
