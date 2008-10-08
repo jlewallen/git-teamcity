@@ -42,20 +42,17 @@ public class VersionNumber {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     VersionNumber other = (VersionNumber) obj;
     return getHash().equals(other.getHash());
   }
 
   @Override
   public String toString() {
-    String datePart = Constants.VERSION_DATE.format(date);
-    String hashPart = hash.substring(0, MAXIMUM_LENGTH - datePart.length() - 3);
-    return String.format("%s - %s", hashPart, datePart);
+    String datePart = " " + Constants.VERSION_DATE.format(date);
+    String hashPart = hash.substring(0, MAXIMUM_LENGTH - datePart.length());
+    return String.format("%s%s", hashPart, datePart);
   }
 }
