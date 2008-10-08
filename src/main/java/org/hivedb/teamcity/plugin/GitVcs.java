@@ -58,7 +58,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
     LogCommand logCommand = new LogCommand(configuration);
     VersionNumber from = new VersionNumber(fromVersion);
     VersionNumber to = new VersionNumber(toVersion);
-    for (Commit commit : logCommand.run(from, to)) {
+    for (Commit commit : logCommand.between(from, to)) {
       log.info(commit);
       List<VcsChange> vcsChanged = new ArrayList<VcsChange>();
       for (NameAndStatus change : commit.getChanges()) {

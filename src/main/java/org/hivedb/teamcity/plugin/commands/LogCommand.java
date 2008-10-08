@@ -16,16 +16,13 @@ public class LogCommand extends GitCommand {
     super(configuration);
   }
   
-  public Collection<Commit> run() throws VcsException {
+  public Collection<Commit> between(VersionNumber from, VersionNumber to) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
-    cli.addParameter(getConfiguration().getRef());
-    return LogOutput.parse(exec(cli).getStdout());
-  }
-  
-  public Collection<Commit> run(VersionNumber from, VersionNumber to) throws VcsException { 
-    GeneralCommandLine cli = createCommandLine();
-    cli.addParameter("log");
+    cli.addParameter("--name-status");
+    if (from.equals(to)) {
+      cli.addParameter("-1");      
+    }
     cli.addParameter(from.getHash());
     cli.addParameter(to.getHash());
     return LogOutput.parse(exec(cli).getStdout());
@@ -42,6 +39,7 @@ public class LogCommand extends GitCommand {
   private Commit getSingle(String ref) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
+    cli.addParameter("--name-status");
     cli.addParameter("-1");
     cli.addParameter(ref);
     Collection<Commit> commits = LogOutput.parse(exec(cli).getStdout()); 
