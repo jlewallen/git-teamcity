@@ -33,6 +33,10 @@ public class VersionNumber {
   public Date getDate() {
     return this.date;
   }
+  
+  public String getShortHash() {
+    return getHash().substring(0, 30);
+  }
     
   @Override
   public int hashCode() {

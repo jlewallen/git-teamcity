@@ -65,7 +65,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
         log.info(change);
         vcsChanged.add(new VcsChange(VcsChangeInfo.Type.CHANGED, "changed", change.getName(), change.getName(), commit.getVersion().toString(), commit.getVersion().toString()));
       }
-      modifications.add(new ModificationData(to.getDate(), vcsChanged, commit.getMessage(), commit.getShortAuthor(), root, to.toString(), to.toString()));
+      modifications.add(new ModificationData(to.getDate(), vcsChanged, commit.getMessage(), commit.getShortAuthor(), root, to.getShortHash(), to.getShortHash()));
     }
     return modifications;
   }
