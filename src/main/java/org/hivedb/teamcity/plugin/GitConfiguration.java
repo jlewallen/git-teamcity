@@ -13,7 +13,7 @@ public class GitConfiguration {
   File projectDirectory;
   File command;
   String url;
-  String ref;
+  String branch;
 
   public File getWorkingDirectory() {
     return workingDirectory;
@@ -31,16 +31,12 @@ public class GitConfiguration {
     return url;
   }
   
-  public String getRef() {
-    return ref;
+  public String getBranch() {
+    return branch;
   }
   
   public String getRemoteBranch() {
-    return "origin/" + getRef();
-  }
-
-  public void setRef(String ref) {
-    this.ref = ref;
+    return "origin/" + getBranch();
   }
 
   public boolean isProjectDirectoryARepository() {
@@ -53,7 +49,7 @@ public class GitConfiguration {
     this.workingDirectory = workingDirectory;
     this.projectDirectory = projectDirectory;
     this.url = url;
-    this.ref = ref;
+    this.branch = ref;
   }
   
   public static GitConfiguration createAgentConfiguration(VcsRoot root, File project) {
@@ -90,6 +86,6 @@ public class GitConfiguration {
   }
   
   public String toString() {
-    return String.format("%s:%s", this.url, this.ref);
+    return String.format("%s:%s", this.url, this.branch);
   }
 }

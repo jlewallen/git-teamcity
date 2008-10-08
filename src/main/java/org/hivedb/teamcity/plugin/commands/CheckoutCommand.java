@@ -21,7 +21,7 @@ public class CheckoutCommand extends GitCommand {
   }
   
   public void run() throws VcsException {
-    run(getConfiguration().getRef());
+    run(getConfiguration().getBranch());
   }
   
   public void run(VersionNumber version) throws VcsException {
