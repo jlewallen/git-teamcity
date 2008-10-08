@@ -73,7 +73,7 @@ public class GitConfiguration {
   private static File inferGitCommand() {
     String[] defaults = new String[] {
       "C:\\Program Files\\Git\\Cmd\\git-debug.cmd",
-      "C:\\Program Files\\Git\\Bin\\git.exe",
+      "C:\\Program Files\\Git\\Cmd\\git.cmd",
       "/usr/bin/git",
     };
     for (String path: defaults) {
