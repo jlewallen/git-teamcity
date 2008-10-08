@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class VersionNumber {
+  private short MAXIMUM_LENGTH = 32;
   private String hash;
   private Date date;
 
@@ -33,10 +34,6 @@ public class VersionNumber {
   public Date getDate() {
     return this.date;
   }
-  
-  public String getShortHash() {
-    return getHash().substring(0, 30);
-  }
     
   @Override
   public int hashCode() {
@@ -57,6 +54,8 @@ public class VersionNumber {
 
   @Override
   public String toString() {
-    return String.format("%s - %s", hash, Constants.VERSION_DATE.format(date));
+    String datePart = Constants.VERSION_DATE.format(date);
+    String hashPart = hash.substring(0, MAXIMUM_LENGTH - datePart.length() - 3);
+    return String.format("%s - %s", hashPart, datePart);
   }
 }
