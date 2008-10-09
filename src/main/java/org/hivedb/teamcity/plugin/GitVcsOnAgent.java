@@ -30,7 +30,6 @@ public class GitVcsOnAgent implements CheckoutOnAgentVcsSupport {
       cmd.run();
     }
     new CheckoutCommand(configuration).forceCheckout(configuration.getRemoteBranch());
-    // new CleanCommand(configuration).everything();
   }
 
   public String getName() {
