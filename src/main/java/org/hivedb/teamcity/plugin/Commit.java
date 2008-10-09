@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Commit {
+  private static final Integer MAXIMUM_AUTHOR_LENGTH = 32;
   Collection<NameAndStatus> changes = new ArrayList<NameAndStatus>();
   String hash, author, message;
   Date date;
@@ -78,8 +79,8 @@ public class Commit {
     if (m.find()) {
       return m.group(1);
     }
-    if (author.length() > 32) {
-      return author.substring(0, 32);
+    if (author.length() > MAXIMUM_AUTHOR_LENGTH) {
+      return author.substring(0, MAXIMUM_AUTHOR_LENGTH);
     }
     return author;
   }

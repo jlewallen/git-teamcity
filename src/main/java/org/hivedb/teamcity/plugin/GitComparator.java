@@ -1,7 +1,6 @@
 package org.hivedb.teamcity.plugin;
 
 import java.util.Comparator;
-import java.util.Date;
 
 public class GitComparator implements Comparator<String> {
   public int compare(String o1, String o2) {
@@ -9,12 +8,9 @@ public class GitComparator implements Comparator<String> {
       return 0;
     }
     else {
-      return extractDate(o1).compareTo(extractDate(o2));
+      VersionNumber v1 = new VersionNumber(o1);
+      VersionNumber v2 = new VersionNumber(o2);
+      return v1.getDate().compareTo(v2.getDate());
     }
-  }
-
-  private Date extractDate(String version) {
-    VersionNumber versionNumber = new VersionNumber(version);
-    return versionNumber.getDate();
   }
 }
