@@ -21,7 +21,7 @@
     </repository>
     <repository>
       <id>jacob_repo</id>
-      <url>file:///third/temp/jacob-maven</url>
+      <url>file:///third/temp/git-teamcity/maven</url>
     </repository>
   </repositories>
   <dependencies>
