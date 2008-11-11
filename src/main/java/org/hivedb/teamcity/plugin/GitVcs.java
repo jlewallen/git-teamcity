@@ -80,7 +80,6 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   public void buildPatch(VcsRoot root, String fromVersion, String toVersion, PatchBuilder builder, CheckoutRules checkoutRules) throws IOException, VcsException {
     log.warn(String.format("Patch from %s to %s", fromVersion, toVersion));
-    throw new UnsupportedOperationException();
   }
 
   @NotNull
