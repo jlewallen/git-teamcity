@@ -2,11 +2,6 @@ A plugin for JetBrains TeamCity (http://www.jetbrains.com/teamcity/) that allows
 
 Compiling
 ---------
-Sorry this is so annyoing... You'll have to change the *absolute* URL in the
-pom.xml to point to where the maven subdirectory is. In the pom.xml it's
-file:///third/temp/git-teamcity/maven. Just change this to reflect your
-installation.
-
 Running mvn install will build/compile.
 
 mvn install
