@@ -21,7 +21,7 @@
     </repository>
     <repository>
       <id>jacob_repo</id>
-      <url>file:///third/temp/git-teamcity/maven</url>
+      <url>file:///${basedir}/maven</url>
     </repository>
   </repositories>
   <dependencies>
