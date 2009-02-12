@@ -74,6 +74,8 @@ public class GitConfiguration {
     String[] defaults = new String[] {
       "C:\\Program Files\\Git\\Cmd\\git-debug.cmd",
       "C:\\Program Files\\Git\\Cmd\\git.cmd",
+      "C:\\Program Files (x86)\\Cmd\\git-debug.cmd",
+      "C:\\Program Files (x86)\\Cmd\\git.cmd",
       "/usr/bin/git",
     };
     for (String path: defaults) {
