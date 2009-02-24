@@ -19,6 +19,7 @@ public class LogCommand extends GitCommand {
   public Collection<Commit> between(VersionNumber from, VersionNumber to) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
+    cli.addParameter("--no-color");
     cli.addParameter("--name-status");
     if (from.equals(to)) {
       cli.addParameter("-1");      
@@ -41,6 +42,7 @@ public class LogCommand extends GitCommand {
   private Commit getSingle(String ref) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("log");
+    cli.addParameter("--no-color");
     cli.addParameter("--name-status");
     cli.addParameter("-1");
     cli.addParameter(ref);

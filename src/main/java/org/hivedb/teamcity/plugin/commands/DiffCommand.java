@@ -23,6 +23,7 @@ public class DiffCommand extends GitCommand {
   public Collection<NameAndStatus> run(VersionNumber from, VersionNumber to)throws VcsException { 
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("diff");
+    cli.addParameter("--no-color");
     cli.addParameter("--name-status");
     cli.addParameter(from.getHash());
     cli.addParameter(to.getHash());

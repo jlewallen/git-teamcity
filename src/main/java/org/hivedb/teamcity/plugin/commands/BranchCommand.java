@@ -19,12 +19,14 @@ public class BranchCommand extends GitCommand {
   public String[] local() throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("branch");
+    cli.addParameter("--no-color");
     return parse(exec(cli).getStdout());
   }
 
   public String[] remote() throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("branch");
+    cli.addParameter("--no-color");
     cli.addParameter("-r");
     return parse(exec(cli).getStdout());
   }
@@ -42,6 +44,7 @@ public class BranchCommand extends GitCommand {
   public void delete(String branch) throws VcsException {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("branch");
+    cli.addParameter("--no-color");
     cli.addParameter("-D");
     cli.addParameter(branch);
     exec(cli);
@@ -51,6 +54,7 @@ public class BranchCommand extends GitCommand {
     GeneralCommandLine cli = createCommandLine();
     cli.addParameter("branch");
     cli.addParameter(branch);
+    cli.addParameter("--no-color");
     cli.addParameter("--track");
     cli.addParameter(remote);
     exec(cli);
