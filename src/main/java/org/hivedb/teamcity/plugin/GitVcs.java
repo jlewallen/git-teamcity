@@ -14,10 +14,12 @@ import java.io.IOException;
 import org.hivedb.teamcity.plugin.commands.CloneCommand;
 import org.hivedb.teamcity.plugin.commands.FetchCommand;
 import org.hivedb.teamcity.plugin.commands.LogCommand;
+import org.hivedb.teamcity.plugin.commands.ShowCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.apache.log4j.Logger;
 import jetbrains.buildServer.web.openapi.WebResourcesManager;
+
 
 public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsPersonalSupport, CollectChangesByIncludeRule {
   Logger log = Logger.getLogger(GitVcs.class);
@@ -67,11 +69,32 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
       List<VcsChange> vcsChanged = new ArrayList<VcsChange>();
       for (NameAndStatus change : commit.getChanges()) {
         log.info(change);
-        vcsChanged.add(new VcsChange(VcsChangeInfo.Type.CHANGED, "changed", change.getName(), change.getName(), commit.getVersion().toString(), commit.getVersion().toString()));
+        vcsChanged.add(createChange(change, fromVersion, toVersion));
       }
       modifications.add(new ModificationData(to.getDate(), vcsChanged, commit.getMessage(), commit.getShortAuthor(), root, to.toString(), to.toString()));
     }
     return modifications;
+  }
+  
+  private VcsChange createChange(@NotNull NameAndStatus change,
+    @NotNull String from,
+    @NotNull String to) {
+
+    switch (change.getStatus()) {
+      case ADDED: // fall through
+      case COPIED:
+        return new VcsChange(VcsChangeInfo.Type.ADDED,
+            change.getStatus().toString(), change.getName(), change.getName(),
+          from, to);
+      case DELETED:
+        return new VcsChange(VcsChangeInfo.Type.REMOVED,
+           change.getStatus().toString(), change.getName(), change.getName(),
+           from,to);
+      default:
+        return new VcsChange(VcsChangeInfo.Type.CHANGED,
+          change.getStatus().toString(), change.getName(), change.getName(),
+          from, to);
+      }
   }
 
   public List<ModificationData> collectBuildChanges(VcsRoot root, String fromVersion, String toVersion, CheckoutRules checkoutRules) throws VcsException {
@@ -84,7 +107,7 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @NotNull
   public byte[] getContent(VcsModification vcsModification, VcsChangeInfo change, VcsChangeInfo.ContentType contentType, VcsRoot root) throws VcsException {
-    if (change.getType() == VcsChangeInfo.Type.REMOVED || change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED ) {
+    if (change.getType() == VcsChangeInfo.Type.DIRECTORY_REMOVED ) {
       return new byte[] { };
     }
     else {
@@ -95,7 +118,11 @@ public class GitVcs extends VcsSupport implements AgentSideCheckoutAbility, VcsP
 
   @NotNull
   public byte[] getContent(String filePath, VcsRoot root, String version) throws VcsException {
-    return new byte[] { };
+    GitConfiguration configuration =
+      GitConfiguration.createServerConfiguration(root);
+    ShowCommand showCommand = new ShowCommand(configuration);
+
+    return showCommand.run(new VersionNumber(version), filePath);
   }
   
   public String describeVcsRoot(VcsRoot root) {

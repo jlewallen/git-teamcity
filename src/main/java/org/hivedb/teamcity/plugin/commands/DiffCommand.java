@@ -41,7 +41,7 @@ public class DiffCommand extends GitCommand {
           continue;
         else {
           String[] fields = line.split(" ");
-          String status = fields[1].trim();
+          String status = fields[0].trim();
           String name = fields[1].trim();
           changes.add(new NameAndStatus(name, status));
         }

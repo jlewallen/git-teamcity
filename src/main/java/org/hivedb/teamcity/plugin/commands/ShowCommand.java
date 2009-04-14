@@ -1,8 +1,9 @@
 package org.hivedb.teamcity.plugin.commands;
 
+import com.intellij.execution.configurations.GeneralCommandLine;
+
 import jetbrains.buildServer.vcs.VcsException;
 
-import org.hivedb.teamcity.plugin.Commit;
 import org.hivedb.teamcity.plugin.GitConfiguration;
 import org.hivedb.teamcity.plugin.VersionNumber;
 
@@ -12,8 +13,11 @@ public class ShowCommand extends GitCommand {
     super(configuration);
   }
 
-  public Commit run(VersionNumber version)throws VcsException {
-    return new LogCommand(getConfiguration()).run(version);
+  public byte[] run(VersionNumber version, String path) throws VcsException {
+    GeneralCommandLine cli = createCommandLine();
+    cli.addParameter("show");
+    cli.addParameter(version.getHash() + ":" + path);
+      
+    return exec(cli).getByteOut();
   }
-  
 }

@@ -14,6 +14,22 @@ Then deploy just shows where the jar and the zip should be copied. You'll
 notice your agents go down for an ugprade and to get the server side workign
 you'll have to restart.
 
+Logging
+---------
+Add the following lines to <teamcity installation directory>/conf/teamcity-server-log4j.xml
+
+  <appender name="GIT.LOG" class="org.apache.log4j.RollingFileAppender">
+    <param name="file" value="${teamcity_logs}teamcity-git.log"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="[%d] %6p [%t] - %30.30c - %m %n"/>
+    </layout>
+  </appender>
+
+  <category name="jetbrains.buildServer.buildTriggers.vcs.git">
+    <priority value="DEBUG"/>
+    <appender-ref ref="GIT.LOG"/>
+  </category>
+
 TODO
 ---------
 
